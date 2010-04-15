@@ -2,10 +2,10 @@
 
 from distutils.core import setup
 
-from sysmon import version
+import sysmon
 
 setup(name='modred',
-      version=version,
+      version=sysmon.version(),
       description='yet another system monitor',
       author='Scott Lawrence',
       author_email='bytbox@gmail.com',
