@@ -3,7 +3,7 @@
 """
 
 class System():
-    """Represents an abstract system.
+    """Represents an abstract system and implements some basic logic.
 
     """
     
@@ -11,6 +11,8 @@ class System():
         self.processors=[]
         self.memory=Memory.null()
         self.drives=[]
+        self.netconns=[] #network connections
+        self.processlist=ProcessList.null()
 
     def add_processor(self,processor):
         """Adds a processor to the system.
@@ -42,15 +44,25 @@ class System():
         """
         return self.drives
 
+    def add_networkconnection(self,nc):
+        """Adds a network connection to the system.
+        """
+        self.netconns+=[nc]
+
+    def networkconnections(self):
+        """Returns a list of all network connections in the system
+        """
+        return self.netconns
+
     def set_processlist(self,processlist):
         """Sets the object representing the process list.
         """
-        pass
+        self.processlist=processlist
 
     def processlist(self):
         """Returns the object representing the process list.
         """
-        pass
+        return self.processlist
 
 
 class SystemPart():
@@ -89,5 +101,21 @@ class ProcessList(SystemPart):
     def null():
         return None
 
+
+class NetworkConnection(SystemPart):
+    """Represents a single network connection
+    """
+    def null():
+        return None
+
+
 class Process:
+    """Represents a single process
+    """
+    pass
+
+
+class Server:
+    """Represents running server software (sshd, httpd, etc...)
+    """
     pass
