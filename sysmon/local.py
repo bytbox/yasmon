@@ -13,7 +13,10 @@ class LocalSystem(System):
     """Represents a local system.
 
     """
-    pass
+    def __init__(self):
+        System.__init__(self)
 
 class LocalProcessor(Processor):
+    """Represents a local processor
+    """
     pass

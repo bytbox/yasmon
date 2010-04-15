@@ -8,7 +8,8 @@ from PyQt4 import QtCore
 from PyQt4.QtGui import *
 
 #parse the options
-parser=OptionParser(usage="usage: %prog [-l | -c]",version="%prog "+version())
+parser=OptionParser(usage="usage: %prog [-l | -c]",
+                    version="%prog "+version()+"\nWritten by Scott Lawrence <bytbox@gmail.com>")
 parser.add_option("-c","--curses",action="store_true",dest="curses",help="Display a curses interface")
 parser.add_option("-l","--log",action="store_true",dest="log",help="Log events to standard output")
 (options,args)=parser.parse_args()
