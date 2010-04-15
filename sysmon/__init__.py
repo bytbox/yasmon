@@ -2,7 +2,7 @@
 
 Sysmon provides python programs with an object-oriented interface to
 the system and other connected systems running the sysmon server
-(normally accessed through yasmd).
+(normally accessed through yasmond).
 """
 
 
