@@ -4,20 +4,38 @@ from optparse import OptionParser
 
 import sys
 
-from sysmon import *
+import sysmon,sysmon.local
 
 from PyQt4 import QtCore
 from PyQt4.QtGui import *
 
 #parse the options
 parser=OptionParser(usage="usage: %prog [-d DELAY] [-l | -c]",
-                    version="%prog "+version()+"\nWritten by Scott Lawrence <bytbox@gmail.com>")
+                    version=("%prog "+sysmon.version()+"\n"+
+                             "Copyright (C) 2010 Scott Lawrence.\n"+
+                             "Licensed under the GNU GPL version 3 or later "+
+                             "<http://gnu.org/licenses/gpl.html>.\n"
+                             "This is free software: you are free to change and redistribute it.\n"
+                             "There is NO WARRANTY, to the extent permitted by law."+
+                             "\n\n"+
+                             "Written by Scott Lawrence <bytbox@gmail.com>"))
 parser.add_option("-c","--curses",action="store_true",dest="curses",help="Display a curses interface")
 parser.add_option("-d","--delay",dest="delay",help="Delay between updates, in seconds (may be decimal)")
 parser.add_option("-l","--log",action="store_true",dest="log",help="Log events to standard output")
 (options,args)=parser.parse_args()
 
+
+#initialize the monitor
+#just local for now
+local=sysmon.local.get_local()
+
+#start the UI
 if options.curses:
     sys.stderr.write("Curses not supported\n")
     exit(-1)
 
+if options.log:
+    pass
+
+else:
+    pass

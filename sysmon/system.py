@@ -8,105 +8,149 @@ class System():
     """
     
     def __init__(self):
-        self.processors=[]
-        self.memory=Memory.null()
-        self.drives=[]
-        self.netconns=[] #network connections
-        self.processlist=ProcessList.null()
+        self._processors=[]
+        self._memory=Memory.null()
+        self._drives=[]
+        self._netconns=[] #network connections
+        self._processlist=ProcessList.null()
+        self._delay=5 #the update interval in seconds
+
+    def set_delay(self,interval):
+        """Sets the update interval after which information is
+        refreshed, in seconds. This may be a fraction.
+        """
+        self._delay=interval
+
+    def delay(self):
+        """Returns the update interval after which information is
+        refreshed in seconds.
+        """
+        return self._delay
+
+    def parts(self):
+        """Returns a list of all parts of the system.
+        """
+        return (self._processors+
+                [self._memory]+
+                self._drives+
+                self._netconns+
+                [self._processlist])
 
     def add_processor(self,processor):
         """Adds a processor to the system.
         """
-        self.processors+=[processor]
+        self._processors+=[processor]
 
     def processors(self):
         """Returns a list of processors in the system.
         """
-        return self.processors
+        return self._processors
 
     def set_memory(self,memory):
         """Sets the system's memory bank.
         """
-        self.memory=memory
+        self._memory=memory
 
     def memory(self):
-        """Returns the system's memory bank
+        """Returns the system's memory bank.
         """
-        return self.memory
+        return self._memory
 
     def add_drive(self,drive):
         """adds a drive to the system
         """
-        self.drives+=[drive]
+        self._drives+=[drive]
 
     def drives(self):
         """Returns a list of all drives in the system.
         """
-        return self.drives
+        return self._drives
 
     def add_networkconnection(self,nc):
         """Adds a network connection to the system.
         """
-        self.netconns+=[nc]
+        self._netconns+=[nc]
 
     def networkconnections(self):
         """Returns a list of all network connections in the system
         """
-        return self.netconns
+        return self._netconns
 
     def set_processlist(self,processlist):
         """Sets the object representing the process list.
         """
-        self.processlist=processlist
+        self._processlist=processlist
 
     def processlist(self):
         """Returns the object representing the process list.
         """
-        return self.processlist
+        return self._processlist
 
 
 class SystemPart():
     """Represents a part of a system
     """
+    def __init__(self):
+        self._delay=None
+        self._system=None
+    
+    @staticmethod
     def null():
         """Returns a null part to be used when no real part is
         available.
         """
         return None
 
+    def set_delay(self,delay):
+        """Sets the delay between updates.
+        """
+        self._delay=delay
+
+    def delay(self):
+        """Returns the current delay between updates.
+        """
+        return self._delay
+
+    def set_system(self,system):
+        """Sets the system that this part is in.
+
+        A part may only be in one system at once - if a part is in two
+        systems at once IRL, it may be best to have a representation
+        of it in each system, or to make it its own system.
+        """
+        self._system=system
+
+    def system(self):
+        return self._system
+
 
 class Processor(SystemPart):
     """Represents a single abstract processor.
     """
-    def null():
-        return None
+    pass
 
 
 class Memory(SystemPart):
     """Represents a memory (RAM) bank.
     """
-    def null():
-        return None
+    pass
 
 
 class Drive(SystemPart):
     """Represents a drive.
     """
-    def null():
-        return None
+    pass
 
 class ProcessList(SystemPart):
     """Represents a list of processes.
     """
-    def null():
-        return None
+    pass
 
 
 class NetworkConnection(SystemPart):
     """Represents a single network connection
     """
-    def null():
-        return None
+    pass
 
 
 class Process:
