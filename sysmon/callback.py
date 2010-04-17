@@ -13,11 +13,29 @@ class SysmonCallback:
     dictionary. Callback functions are called in the order they were
     registered.
     """
-    def __init__():
-        pass
-    
-    def hook(name,func):
-        pass
 
-    def call(name,data):
-        pass
+    def __init__(self):
+        """Creates an empty callback.
+        """
+        self.hooks=dict([])
+    
+    def hook(self,name,func):
+        """Hooks the given function onto a string.
+
+        Whenever the string is called, the given function will be
+        called with a single argument (passed from the original
+        caller).
+        """
+        if name in self.hooks:
+            self.hooks[name].append(func)
+        else:
+            self.hooks[name]=[func]
+
+    def call(self,name,data):
+        """Calls all hooks matching the string with the given data.
+
+        The hooks are called in the order they were created.
+        """
+        if name in self.hooks:
+            for func in self.hooks[name]:
+                func(data)

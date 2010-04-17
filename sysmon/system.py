@@ -2,6 +2,8 @@
 
 """
 
+import callback
+
 class System():
     """Represents an abstract system and implements some basic logic.
 
@@ -14,6 +16,7 @@ class System():
         self._netconns=[] #network connections
         self._processlist=ProcessList.null()
         self._delay=5 #the update interval in seconds
+        self._callback=callback.SysmonCallback()
 
     def set_delay(self,interval):
         """Sets the update interval after which information is
@@ -26,6 +29,19 @@ class System():
         refreshed in seconds.
         """
         return self._delay
+
+    def set_callback(self,callback):
+        """Sets the callback class to be used
+        
+        Generally, this function is not needed, as a callback class is
+        usually created that can be used without setting a new one.
+        """
+        self.callback=callback
+
+    def callback(self):
+        """Returns the callback class being used
+        """
+        return self._callback
 
     def parts(self):
         """Returns a list of all parts of the system.
