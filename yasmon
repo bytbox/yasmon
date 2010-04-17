@@ -15,14 +15,26 @@ parser=OptionParser(usage="usage: %prog [-d DELAY] [-l | -c]",
                              "Copyright (C) 2010 Scott Lawrence.\n"+
                              "Licensed under the GNU GPL version 3 or later "+
                              "<http://gnu.org/licenses/gpl.html>.\n"
-                             "This is free software: you are free to change and redistribute it.\n"
-                             "There is NO WARRANTY, to the extent permitted by law."+
+                             "This is free software: "+
+                             "you are free to change and redistribute it.\n"
+                             "There is NO WARRANTY, to the "+
+                             "extent permitted by law."+
                              "\n\n"+
                              "Written by Scott Lawrence <bytbox@gmail.com>"))
-parser.add_option("-c","--curses",action="store_true",dest="curses",help="Display a curses interface")
-parser.add_option("-d","--delay",dest="delay",help="Delay between updates, in seconds (may be decimal)")
-parser.add_option("-l","--log",action="store_true",dest="log",help="Log events to standard output")
+parser.add_option("-c","--curses",
+                  action="store_true",dest="curses",
+                  help="Display a curses interface")
+parser.add_option("-d","--delay",dest="delay",
+                  help="Delay between updates, in seconds (may be decimal)")
+parser.add_option("-l","--log",
+                  action="store_true",dest="log",
+                  help="Log events to standard output")
 (options,args)=parser.parse_args()
+
+#read the configuration file
+fin=open("/etc/yasmon.conf")
+
+fin.close()
 
 
 #initialize the monitor
@@ -38,4 +50,42 @@ if options.log:
     pass
 
 else:
-    pass
+    class MainWindow(QMainWindow):
+        def __init__(self):
+            QMainWindow.__init__(self)
+            self.createActions()
+            self.createMenus()
+            self.createLayout()
+            self.createStatusBar()
+
+        #actions
+        def about(self):
+            #FIXME
+            pass
+
+        def createActions(self):
+            self.aboutAct=QAction("&About YASMon",self,
+                                  statusTip="Display YASMon's About box",
+                                  triggered=self.about)
+            self.aboutQtAct=QAction("About &Qt", self,
+                                    statusTip="Show the Qt library's About box",
+                                    triggered=qApp.aboutQt)
+        
+        def createMenus(self):
+            self.helpMenu=self.menuBar().addMenu("&Help")
+            #FIXME add manual
+            self.helpMenu.addSeparator()
+            self.helpMenu.addAction(self.aboutAct)
+            self.helpMenu.addAction(self.aboutQtAct)
+        
+        def createLayout(self):
+            pass
+
+        def createStatusBar(self):
+            self.statusBar().showMessage("Ready")
+    
+    app = QApplication(sys.argv)
+    win = MainWindow()
+    win.setWindowTitle("YASMon")
+    win.show()
+    sys.exit(app.exec_())
