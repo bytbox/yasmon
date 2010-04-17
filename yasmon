@@ -6,9 +6,6 @@ import sys
 
 import sysmon,sysmon.local
 
-from PyQt4 import QtCore
-from PyQt4.QtGui import *
-
 #parse the options
 parser=OptionParser(usage="usage: %prog [-d DELAY] [-l | -c]",
                     version=("%prog "+sysmon.version()+"\n"+
@@ -50,6 +47,9 @@ if options.log:
     pass
 
 else:
+    from PyQt4 import QtCore
+    from PyQt4.QtGui import *
+
     class MainWindow(QMainWindow):
         def __init__(self):
             QMainWindow.__init__(self)
