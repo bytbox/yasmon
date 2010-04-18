@@ -60,6 +60,7 @@ class LocalMemory(Memory):
 
         By default, the file /proc/meminfo is used.
         """
+        Memory.__init__(self)
         self.filename=filename
 
 

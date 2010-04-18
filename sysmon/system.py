@@ -2,6 +2,8 @@
 
 """
 
+from threading import Timer
+
 import callback
 
 class System():
@@ -17,12 +19,26 @@ class System():
         self._processlist=ProcessList.null()
         self._delay=5 #the update interval in seconds
         self._callback=callback.SysmonCallback()
+        self._timers=[]
 
     def run(self):
         """Runs the system monitor.
 
+        All parts are updated immediately, and then again at the
+        interval specified in the parts' configuration.
         """
-        pass
+        print "hi"
+        for part in self.parts():
+            part.update()
+
+    def stop(self):
+        """Stops the system monitor.
+
+        The monitor may safely be stopped and run and indefinite
+        number of times.
+        """
+        for part in self.parts():
+            part.timer.cancel()
 
     def update(self):
         """Performs an update of the system.
@@ -77,6 +93,7 @@ class System():
     def add_processor(self,processor):
         """Adds a processor to the system.
         """
+        processor.set_system(self)
         self._processors+=[processor]
 
     def processors(self):
@@ -87,6 +104,7 @@ class System():
     def set_memory(self,memory):
         """Sets the system's memory bank.
         """
+        memory.set_system(self)
         self._memory=memory
 
     def memory(self):
@@ -97,6 +115,7 @@ class System():
     def add_drive(self,drive):
         """adds a drive to the system
         """
+        drive.set_system(self)
         self._drives+=[drive]
 
     def drives(self):
@@ -107,6 +126,7 @@ class System():
     def add_networkconnection(self,nc):
         """Adds a network connection to the system.
         """
+        nc.set_system(self)
         self._netconns+=[nc]
 
     def networkconnections(self):
@@ -117,6 +137,7 @@ class System():
     def set_processlist(self,processlist):
         """Sets the object representing the process list.
         """
+        processlist.set_system(self)
         self._processlist=processlist
 
     def processlist(self):
@@ -126,25 +147,38 @@ class System():
 
 
 class SystemPart():
-    """Represents a part of a system
+    """Represents a part of a system.
     """
     def __init__(self):
         self._delay=None
         self._system=None
+        self.timer=None
     
     @staticmethod
     def null():
         """Returns a null part to be used when no real part is
         available.
         """
-        return None
+        return SystemPart()
 
-    def update():
+    def update(self):
         """Performs an update of the part's information.
 
         This method is called periodically (depending on the delay
         setting), so there is ordinarily no reason to call it from
         outside of the system.
+        """
+        if not self.delay():
+            self.set_delay(self.system().delay())
+        self.timer=Timer(self.delay(),self.update)
+        self.timer.start()
+        print " performing update - again in "+str(self.delay())
+        self.do_update()
+
+    def do_update(self):
+        """Perform the actual update.
+
+        Part implementations should override this method.
         """
         pass
 

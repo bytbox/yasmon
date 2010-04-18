@@ -45,7 +45,7 @@ callback=sysmon.callback.SysmonCallback()
 
 #just local for now
 local=sysmon.local.get_local()
-local.set_delay(options.delay)
+local.set_delay(float(options.delay))
 local.set_callback(callback)
 
 #start the UI
@@ -98,8 +98,8 @@ else:
     win = MainWindow()
     win.setWindowTitle("YASMon")
     win.show()
+    #run sysmon
+    local.run()
     sys.exit(app.exec_())
 
 
-#run sysmon
-local.run()
