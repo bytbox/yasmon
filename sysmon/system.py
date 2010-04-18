@@ -18,6 +18,28 @@ class System():
         self._delay=5 #the update interval in seconds
         self._callback=callback.SysmonCallback()
 
+    def run(self):
+        """Runs the system monitor.
+
+        """
+        pass
+
+    def update(self):
+        """Performs an update of the system.
+
+        These updates are done periodically (depending on the delay
+        setting), so there is ordinarily no reason to call it from
+        outside of the system.
+
+        Implementation note: this method updates the entire
+        system. Since each part may have its own delay interval, the
+        parts are responsible for calling their own update methods
+        independently of the system. In other words, this method is
+        ordinarily never called.
+        """
+        for part in self.parts():
+            part.update()
+
     def set_delay(self,interval):
         """Sets the update interval after which information is
         refreshed, in seconds. This may be a fraction.
@@ -34,7 +56,7 @@ class System():
         """Sets the callback class to be used
         
         Generally, this function is not needed, as a callback class is
-        usually created that can be used without setting a new one.
+        usually created that can be used without setting a new one. 
         """
         self.callback=callback
 
@@ -116,6 +138,15 @@ class SystemPart():
         available.
         """
         return None
+
+    def update():
+        """Performs an update of the part's information.
+
+        This method is called periodically (depending on the delay
+        setting), so there is ordinarily no reason to call it from
+        outside of the system.
+        """
+        pass
 
     def set_delay(self,delay):
         """Sets the delay between updates.

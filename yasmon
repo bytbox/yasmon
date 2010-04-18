@@ -4,7 +4,7 @@ from optparse import OptionParser
 
 import sys
 
-import sysmon,sysmon.local
+import sysmon,sysmon.local,sysmon.callback
 
 #parse the options
 parser=OptionParser(usage="usage: %prog [-d DELAY] [-l | -c]",
@@ -21,7 +21,7 @@ parser=OptionParser(usage="usage: %prog [-d DELAY] [-l | -c]",
 parser.add_option("-c","--curses",
                   action="store_true",dest="curses",
                   help="Display a curses interface")
-parser.add_option("-d","--delay",dest="delay",
+parser.add_option("-d","--delay",dest="delay",default=5,
                   help="Delay between updates, in seconds (may be decimal)")
 parser.add_option("-l","--log",
                   action="store_true",dest="log",
@@ -29,14 +29,24 @@ parser.add_option("-l","--log",
 (options,args)=parser.parse_args()
 
 #read the configuration file
-fin=open("/etc/yasmon.conf")
-
-fin.close()
+try:
+    fin=open("/etc/yasmon.conf")
+    for line in fin:
+        pass
+    fin.close()
+except IOError:
+    print "Couldn't read /etc/yasmon.conf"
+    sys.exit(1)
 
 
 #initialize the monitor
+#callback
+callback=sysmon.callback.SysmonCallback()
+
 #just local for now
 local=sysmon.local.get_local()
+local.set_delay(options.delay)
+local.set_callback(callback)
 
 #start the UI
 if options.curses:
@@ -60,8 +70,8 @@ else:
 
         #actions
         def about(self):
-            #FIXME
-            pass
+            QMessageBox.about(self, "About YASMon",
+                              "<b>YASMon v"+sysmon.version())
 
         def createActions(self):
             self.aboutAct=QAction("&About YASMon",self,
@@ -89,3 +99,7 @@ else:
     win.setWindowTitle("YASMon")
     win.show()
     sys.exit(app.exec_())
+
+
+#run sysmon
+local.run()
