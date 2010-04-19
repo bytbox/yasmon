@@ -51,7 +51,7 @@ parser.add_option("-l","--log",
 
 #read the configuration file
 mode='local'
-allowed='127.0.0.1'
+servers='127.0.0.1'
 try:
     fin=open("/etc/yasmon.conf")
     lex=shlex.shlex(fin)
@@ -63,8 +63,8 @@ try:
                 exit(-1)
             if token=='local' or token=='remote':
                 mode=token
-        elif token=='allow':
-            allowed=lex.read_token()
+        elif token=='servers':
+            servers=lex.read_token()
         token=lex.read_token()
     fin.close()
 except IOError:
