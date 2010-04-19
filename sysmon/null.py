@@ -29,8 +29,8 @@ class NullMemory(Memory):
     pass
 
 
-class NullDrive(Drive):
-    """Represents a null drive
+class NullFilesystem(Filesystem):
+    """Represents a null filesystem
     """
     pass
 

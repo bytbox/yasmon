@@ -14,7 +14,7 @@ class System():
     def __init__(self):
         self._processors=[]
         self._memory=Memory.null()
-        self._drives=[]
+        self._filesystems=[]
         self._netconns=[] #network connections
         self._processlist=ProcessList.null()
         self._delay=5 #the update interval in seconds
@@ -27,7 +27,6 @@ class System():
         All parts are updated immediately, and then again at the
         interval specified in the parts' configuration.
         """
-        print "hi"
         for part in self.parts():
             part.update()
 
@@ -74,7 +73,7 @@ class System():
         Generally, this function is not needed, as a callback class is
         usually created that can be used without setting a new one. 
         """
-        self.callback=callback
+        self._callback=callback
 
     def callback(self):
         """Returns the callback class being used
@@ -86,7 +85,7 @@ class System():
         """
         return (self._processors+
                 [self._memory]+
-                self._drives+
+                self._filesystems+
                 self._netconns+
                 [self._processlist])
 
@@ -112,16 +111,16 @@ class System():
         """
         return self._memory
 
-    def add_drive(self,drive):
-        """adds a drive to the system
+    def add_filesystem(self,filesystem):
+        """adds a filesystem to the system
         """
-        drive.set_system(self)
-        self._drives+=[drive]
+        filesystem.set_system(self)
+        self._filesystems+=[filesystem]
 
-    def drives(self):
-        """Returns a list of all drives in the system.
+    def filesystems(self):
+        """Returns a list of all filesystems in the system.
         """
-        return self._drives
+        return self._filesystems
 
     def add_networkconnection(self,nc):
         """Adds a network connection to the system.
@@ -172,7 +171,6 @@ class SystemPart():
             self.set_delay(self.system().delay())
         self.timer=Timer(self.delay(),self.update)
         self.timer.start()
-        print " performing update - again in "+str(self.delay())
         self.do_update()
 
     def do_update(self):
@@ -180,7 +178,7 @@ class SystemPart():
 
         Part implementations should override this method.
         """
-        pass
+        self.system().callback().call("misc.updated",None)
 
     def set_delay(self,delay):
         """Sets the delay between updates.
@@ -217,8 +215,8 @@ class Memory(SystemPart):
     pass
 
 
-class Drive(SystemPart):
-    """Represents a drive.
+class Filesystem(SystemPart):
+    """Represents a filesystem.
     """
     pass
 

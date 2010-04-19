@@ -2,6 +2,8 @@
 
 """
 
+import re;
+
 from system import *;
 
 def get_local():
@@ -12,16 +14,22 @@ def get_local():
     #create the processors
     cpuinfo=file("/proc/cpuinfo")
     for line in cpuinfo:
-        pass 
+        match=re.match("^processor[^:]*:[ \t]*([0-9]+)",line)
+        if match:
+            system.add_processor(LocalProcessor(match.group(0),"cpu"+match.group(0)))
     cpuinfo.close()
 
     #create the memory bank
     system.set_memory(LocalMemory())
 
-    #create the drives
+    #create the filesystems
     partitions=file("/proc/partitions")
     for line in partitions:
-        pass
+        match=re.match("^[ \t]+([0-9]+)[ \t]+([0-9]+)[ \t]+",line)
+        if match:
+            major=match.group(1)
+            minor=match.group(2)
+            system.add_filesystem(LocalFilesystem(major,minor))
     partitions.close()
 
     #create the process list
@@ -64,10 +72,14 @@ class LocalMemory(Memory):
         self.filename=filename
 
 
-class LocalDrive(Drive):
-    """Represents a local drive
+class LocalFilesystem(Filesystem):
+    """Represents a local filesystem
     """
-    pass
+    def __init__(self,major,minor):
+        """Creates the filesystem from the major and minor
+        identifiers.
+        """
+        Filesystem.__init__(self)
 
 
 class LocalProcessList(ProcessList):
