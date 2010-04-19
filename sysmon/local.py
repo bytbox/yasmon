@@ -58,8 +58,16 @@ class LocalProcessor(Processor):
         Ordinarily, the name will be the same as cpu<id>.
         """
         Processor.__init__(self)
+        self._name=name
+        self._id=id
+
+    def name(self):
+        return self._name
 
     def do_update(self):
+        with open("/proc/cpuinfo") as cpuinfo:
+            for line in cpuinfo:
+                pass
         self.callback().call("local.processor.updated",None)
 
 
@@ -73,9 +81,44 @@ class LocalMemory(Memory):
         """
         Memory.__init__(self)
         self.filename=filename
+        self._dict=dict()
 
     def do_update(self):
+        with open(self.filename) as meminfo:
+            for line in meminfo:
+                match=re.search("([^:]+)[ \t]*:[ \t]*(.+)$",line)
+                if match:
+                    key=match.group(1)
+                    val=match.group(2)
+                    match=re.search("([0-9]+)[ \t]*kB",val)
+                    if match:
+                        val=int(match.group(1))*1024
+                    match=re.search("([0-9]+)[ \t]*MB",str(val))
+                    if match:
+                        val=int(match.group(1))*1024*1024
+                    self._dict[key]=val
         self.callback().call("local.memory.updated",None)
+
+    def dict(self):
+        return self._dict
+
+    def total_memory(self):
+        return self.dict()['MemTotal'];
+
+    def free_memory(self):
+        return self.dict()['MemFree'];
+
+    def active_memory(self):
+        return self.dict()['Active'];
+
+    def inactive_memory(self):
+        return self.dict()['Inactive'];
+
+    def total_swap(self):
+        return self.dict()['SwapTotal'];
+
+    def free_swap(self):
+        return self.dict()['SwapFree'];
 
 
 class LocalFilesystem(Filesystem):
@@ -88,7 +131,7 @@ class LocalFilesystem(Filesystem):
         Filesystem.__init__(self)
 
     def do_update(self):
-        self.callback.call("local.filesystem.updated",None)
+        self.callback().call("local.filesystem.updated",None)
 
 
 class LocalProcessList(ProcessList):
@@ -101,7 +144,7 @@ class LocalProcessList(ProcessList):
         ProcessList.__init__(self)
 
     def do_update(self):
-        self.callback.call("local.processlist.updated",None)
+        self.callback().call("local.processlist.updated",None)
 
 
 class LocalProcess(Process):

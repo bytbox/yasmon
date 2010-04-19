@@ -76,8 +76,13 @@ if options.curses:
 
 if options.log:
     def handle_processor_update(data):
-        print "Processor: "
+        for p in local.processors():
+            pass
+    def handle_memory_update(data):
+        mem=local.memory()
+        print "mem: %f%%" % (100*float(mem.active_memory())/float(mem.total_memory()))
     callback.hook("local.processor.updated",handle_processor_update)
+    callback.hook("local.memory.updated",handle_memory_update)
     local.run()
     #now wait
     try:

@@ -230,6 +230,7 @@ class Processor(SystemPart):
     def name(self):
         """An appropriate name for the processor, like cpu4.
         """
+        return "cpu"
 
     def modelname(self):
         """The modelname of this processor.
@@ -251,6 +252,16 @@ class Processor(SystemPart):
         """
         return 0
 
+    def dict(self):
+        """Returns a dictionary with a massive amount of
+        meta-information, by string. 
+
+        Most implementations will take this directly out of
+        /proc/cpuinfo. It is generally bad form to use this directly
+        in an application.
+        """
+        return dict()
+
 
 class Memory(SystemPart):
     """Represents a memory (RAM) bank.
@@ -263,7 +274,7 @@ class Memory(SystemPart):
     def free_memory(self):
         """Returns the amount of completely free memory, in bytes.
 
-        Generally, it's better to use inactive_memory, since
+        Generally, it's better to use unused_memory, since
         free_memory doesn't count caching and other such "essentially
         free" types of memory.
         """
@@ -276,6 +287,11 @@ class Memory(SystemPart):
 
     def inactive_memory(self):
         """Returns the amount of inactive memory, in bytes.
+        """
+        return 0
+
+    def unused_memory(self):
+        """Returns the amount of unused memory, in bytes.
         """
         return self.total_memory()-self.active_memory()
 
