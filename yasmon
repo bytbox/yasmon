@@ -57,8 +57,9 @@ except IOError:
 #initialize the monitor
 #callback
 callback=sysmon.callback.SysmonCallback()
-callback.hook("misc.updated",
-              (lambda data: sys.stdout.write("misc.updated\n")))
+def handle_misc_update(data):
+    print "misc.updated: ",data
+callback.hook("misc.updated",handle_misc_update)
 callback.hook("local.misc.updated",
               (lambda data: sys.stdout.write("local.misc.updated\n")))
 #just local for now
@@ -75,14 +76,15 @@ if options.curses:
     exit(-1)
 
 if options.log:
-    def handle_processor_update(data):
+    def local_handle_processor_update(name):
         for p in local.processors():
-            pass
-    def handle_memory_update(data):
+            if p.name()==name:
+                print "%s updated" % name
+    def local_handle_memory_update(data):
         mem=local.memory()
         print "mem: %f%%" % (100*float(mem.active_memory())/float(mem.total_memory()))
-    callback.hook("local.processor.updated",handle_processor_update)
-    callback.hook("local.memory.updated",handle_memory_update)
+    callback.hook("local.processor.updated",local_handle_processor_update)
+    callback.hook("local.memory.updated",local_handle_memory_update)
     local.run()
     #now wait
     try:

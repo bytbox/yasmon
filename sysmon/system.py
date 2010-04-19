@@ -199,7 +199,7 @@ class SystemPart():
 
         Part implementations should override this method.
         """
-        self.system().callback().call("misc.updated",None)
+        self.system().callback().call("misc.updated",self)
 
     def set_delay(self,delay):
         """Sets the delay between updates.

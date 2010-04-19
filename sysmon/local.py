@@ -16,7 +16,7 @@ def get_local():
     for line in cpuinfo:
         match=re.match("^processor[^:]*:[ \t]*([0-9]+)",line)
         if match:
-            system.add_processor(LocalProcessor(match.group(0),"cpu"+match.group(0)))
+            system.add_processor(LocalProcessor(match.group(1),"cpu"+match.group(1)))
     cpuinfo.close()
 
     #create the memory bank
@@ -33,7 +33,7 @@ def get_local():
     partitions.close()
 
     #create the process list
-    system.set_processlist(ProcessList())
+    system.set_processlist(LocalProcessList())
     return system
 
 class LocalSystem(System):
@@ -68,7 +68,7 @@ class LocalProcessor(Processor):
         with open("/proc/cpuinfo") as cpuinfo:
             for line in cpuinfo:
                 pass
-        self.callback().call("local.processor.updated",None)
+        self.callback().call("local.processor.updated",self.name())
 
 
 class LocalMemory(Memory):
