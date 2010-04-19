@@ -109,6 +109,8 @@ if options.log:
         while True:
             time.sleep(500)
     except KeyboardInterrupt:
+        #stop all the daemons
+        local.acquire()
         print "Bye!"
 
 else:
