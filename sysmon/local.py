@@ -59,6 +59,9 @@ class LocalProcessor(Processor):
         """
         Processor.__init__(self)
 
+    def do_update(self):
+        self.callback().call("local.processor.updated",None)
+
 
 class LocalMemory(Memory):
     """Represents a local memory (RAM) bank
@@ -71,9 +74,12 @@ class LocalMemory(Memory):
         Memory.__init__(self)
         self.filename=filename
 
+    def do_update(self):
+        self.callback().call("local.memory.updated",None)
+
 
 class LocalFilesystem(Filesystem):
-    """Represents a local filesystem
+    """Represents a local filesystem.
     """
     def __init__(self,major,minor):
         """Creates the filesystem from the major and minor
@@ -81,17 +87,24 @@ class LocalFilesystem(Filesystem):
         """
         Filesystem.__init__(self)
 
+    def do_update(self):
+        self.callback.call("local.filesystem.updated",None)
+
 
 class LocalProcessList(ProcessList):
-    """Represents a local list of processes
+    """Represents a local list of processes.
 
     Since this class always draws its information from the /proc
     directory, all created on the same system will be identical.
     """
-    pass
+    def __init__(self):
+        ProcessList.__init__(self)
+
+    def do_update(self):
+        self.callback.call("local.processlist.updated",None)
 
 
 class LocalProcess(Process):
-    """Represents a single local process
+    """Represents a single local process.
     """
     pass

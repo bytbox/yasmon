@@ -2,7 +2,7 @@
 
 """
 
-from threading import Timer
+from threading import Lock,Timer
 
 import callback
 
@@ -12,6 +12,7 @@ class System():
     """
     
     def __init__(self):
+        self.lock=Lock()
         self._processors=[]
         self._memory=Memory.null()
         self._filesystems=[]
@@ -38,6 +39,16 @@ class System():
         """
         for part in self.parts():
             part.timer.cancel()
+
+    def acquire(self):
+        """Acquire the lock object hidden in this system,
+        """
+        self.lock.acquire()
+
+    def release(self):
+        """Release the lock object hidden in this system.
+        """
+        self.lock.release()
 
     def update(self):
         """Performs an update of the system.
@@ -167,11 +178,21 @@ class SystemPart():
         setting), so there is ordinarily no reason to call it from
         outside of the system.
         """
+        #acquire the lock
+        self.system().acquire()
+        #do the wuhk
+        self.do_update()
+        #reset the timer
         if not self.delay():
             self.set_delay(self.system().delay())
         self.timer=Timer(self.delay(),self.update)
+        self.timer.daemon=True
         self.timer.start()
-        self.do_update()
+        #release the lock
+        self.system().release()
+
+    def callback(self):
+        return self.system().callback()
 
     def do_update(self):
         """Perform the actual update.
@@ -206,13 +227,77 @@ class SystemPart():
 class Processor(SystemPart):
     """Represents a single abstract processor.
     """
-    pass
+    def name(self):
+        """An appropriate name for the processor, like cpu4.
+        """
+
+    def modelname(self):
+        """The modelname of this processor.
+        """
+        return "Unknown"
+
+    def max_freq(self):
+        """The maximum frequency of this processor, in MHz.
+        """
+        return 0
+
+    def freq(self):
+        """The current operating frequency of this processor, in MHz.
+        """
+        return 0
+
+    def usage(self):
+        """The current usage of this processor, as a fraction.
+        """
+        return 0
 
 
 class Memory(SystemPart):
     """Represents a memory (RAM) bank.
     """
-    pass
+    def total_memory(self):
+        """Returns the total amount of memory, in bytes.
+        """
+        return 0
+
+    def free_memory(self):
+        """Returns the amount of completely free memory, in bytes.
+
+        Generally, it's better to use inactive_memory, since
+        free_memory doesn't count caching and other such "essentially
+        free" types of memory.
+        """
+        return 0
+
+    def active_memory(self):
+        """Returns the number of bytes of active memory.
+        """
+        return 0
+
+    def inactive_memory(self):
+        """Returns the amount of inactive memory, in bytes.
+        """
+        return self.total_memory()-self.active_memory()
+
+    def total_swap(self):
+        """Returns the total amount of swap, in bytes.
+        """
+        return 0
+
+    def free_swap(self):
+        """Returns the amount of free swap, in bytes.
+        """
+        return 0
+
+    def dict(self):
+        """Returns a dictionary with a massive amount of
+        meta-information, by string. 
+
+        Most implementations will take this directly out of
+        /proc/meminfo. It is generally bad form to use this in an
+        application.
+        """
+        return dict()
 
 
 class Filesystem(SystemPart):

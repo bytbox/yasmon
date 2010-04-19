@@ -3,6 +3,7 @@
 from optparse import OptionParser
 import shlex
 import sys
+import time
 
 import sysmon,sysmon.local,sysmon.callback
 
@@ -56,7 +57,10 @@ except IOError:
 #initialize the monitor
 #callback
 callback=sysmon.callback.SysmonCallback()
-callback.hook("misc.updated",(lambda data: sys.stdout.write("misc.updated\n")))
+callback.hook("misc.updated",
+              (lambda data: sys.stdout.write("misc.updated\n")))
+callback.hook("local.misc.updated",
+              (lambda data: sys.stdout.write("local.misc.updated\n")))
 #just local for now
 local=sysmon.local.get_local()
 local.set_delay(float(options.delay))
@@ -71,7 +75,16 @@ if options.curses:
     exit(-1)
 
 if options.log:
-    pass
+    def handle_processor_update(data):
+        print "Processor: "
+    callback.hook("local.processor.updated",handle_processor_update)
+    local.run()
+    #now wait
+    try:
+        while True:
+            time.sleep(500)
+    except KeyboardInterrupt:
+        print "Bye!"
 
 else:
     from PyQt4 import QtCore
