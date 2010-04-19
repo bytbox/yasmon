@@ -4,7 +4,7 @@ from distutils.core import setup
 
 import sysmon
 
-setup(name='modred',
+setup(name='YASMon',
       version=sysmon.version(),
       description='yet another system monitor',
       author='Scott Lawrence',
@@ -15,4 +15,5 @@ setup(name='modred',
       requires=['PyQt4'],
       packages=['sysmon'],
       scripts=['yasmon'],
+      data_files=[('/usr/share/man/man1',['yasmon.1','yasmond.1'])]
       )
