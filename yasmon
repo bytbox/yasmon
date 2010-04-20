@@ -95,9 +95,8 @@ if options.curses:
 
 if options.log:
     def local_handle_processor_update(name):
-        for p in local.processors():
-            if p.name()==name:
-                print "%s updated" % name
+        p=local.processor(name)
+        print "%s \"%s\": " % (p.name(),p.modelname())
     def local_handle_memory_update(data):
         mem=local.memory()
         print "mem: %f%%" % (100*float(mem.active_memory())/float(mem.total_memory()))

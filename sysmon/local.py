@@ -78,15 +78,44 @@ class LocalProcessor(Processor):
         Processor.__init__(self)
         self._name=name
         self._id=id
+        self._dict=dict()
 
     def name(self):
         return self._name
 
+    def dict(self):
+        return self._dict
+
     def do_update(self):
+        ignoring=True
         with open("/proc/cpuinfo") as cpuinfo:
             for line in cpuinfo:
-                pass
+                match=re.match("processor[ \t]*:[ \t]*([0-9]+)",line)
+                if match:
+                    #should we ignore stuff, or pay attention?
+                    if match.group(1)==str(self._id):
+                        ignoring=False
+                    else:
+                        ignoring=True
+                if not ignoring:
+                    match=re.search("([^:\t]+)[ \t]*:[ \t]*(.+)$",line)
+                    if match:
+                        key=match.group(1)
+                        val=match.group(2)
+                        self._dict[key]=val
         self.callback().call("local.processor.updated",self.name())
+
+    def modelname(self):
+        return self.dict()['model name']
+
+    def max_freq(self):
+        return self.freq() #FIXME
+
+    def freq(self):
+        return self.dict()['cpu MHz']
+
+    def usage(self):
+        return 0 #FIXME
 
 
 class LocalMemory(Memory):
@@ -156,7 +185,8 @@ class LocalProcessList(ProcessList):
     """Represents a local list of processes.
 
     Since this class always draws its information from the /proc
-    directory, all created on the same system will be identical.
+    directory, all instances created on the same system will be
+    identical.
     """
     def __init__(self):
         ProcessList.__init__(self)

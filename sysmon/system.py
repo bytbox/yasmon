@@ -129,6 +129,15 @@ class System():
         """
         return self._processors
 
+    def processor(self,name):
+        """Returns the processor with the specified name, or None if
+        there is none.
+        """
+        for p in self.processors():
+            if p.name()==name:
+                return p
+        return None
+
     def set_memory(self,memory):
         """Sets the system's memory bank.
         """
