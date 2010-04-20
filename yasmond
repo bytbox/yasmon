@@ -36,4 +36,8 @@ parser=OptionParser(usage="usage: %prog",
                              "extent permitted by law."+
                              "\n\n"+
                              "Written by Scott Lawrence <bytbox@gmail.com>"))
+parser.add_option("-p","--port",dest="port",
+                  help="The port on which to host the YASMon server. Default: 61874")
+#(maintainer note - the port default comes from the sha1sum of YASMon
+#with no newline)
 (options,args)=parser.parse_args()

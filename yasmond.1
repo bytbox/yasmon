@@ -2,8 +2,18 @@
 .SH NAME
 YASMon \- Yet another system monitor - server
 .SH SYNOPSIS
-.B yasmond
+.B yasmond [-p PORT]
+.SH DESCRIPTION
+\fByasmond\fR hosts a simple server, providing to any client
+information about the status of the computer on which the server is
+being hosted. This information ordinarily includes: CPU load, memory
+usage, disk usage, and a high-level overview of the activity of
+various server processes.
 
+Since anyone can connect to the server without authentication, it is
+important to be sure that the information YASMon provides is not
+sensitive. If the information is sensitive but YASMon must still be
+used, it may be wise to hide YASMon with a firewall.
 .SH OPTIONS
 .TP
 \fB\-\-version\fR
@@ -11,6 +21,9 @@ show program's version number and exit
 .TP
 \fB\-h\fR, \fB\-\-help\fR
 show this help message and exit
+.TP
+\fB\-p\fR, \fB\-\-port\fR
+The port on which to host he YASMon server. Default: 61874
 .SH AUTHOR
 Written by Scott Lawrence <bytbox@gmail.com>
 .SH COPYRIGHT
