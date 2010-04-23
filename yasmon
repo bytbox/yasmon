@@ -90,18 +90,26 @@ for fs in local.filesystems():
 
 #start the UI
 if options.curses:
+    #FIXME
     sys.stderr.write("Curses not supported\n")
     exit(-1)
 
-if options.log:
+elif options.log:
+    #logging version
+
+    #hooks
     def local_handle_processor_update(name):
         p=local.processor(name)
         print "%s \"%s\": " % (p.name(),p.modelname())
     def local_handle_memory_update(data):
         mem=local.memory()
         print "mem: %f%%" % (100*float(mem.active_memory())/float(mem.total_memory()))
+
+    #register hooks
     callback.hook("local.processor.updated",local_handle_processor_update)
     callback.hook("local.memory.updated",local_handle_memory_update)
+
+    #run
     local.run()
     #now wait
     try:
@@ -112,9 +120,84 @@ if options.log:
         local.acquire()
         print "Bye!"
 
+
 else:
+    #GUI Code for YASMon client (uses QT4)
     from PyQt4 import QtCore
     from PyQt4.QtGui import *
+
+    class CPUView(QWidget):
+        """A widget to view cpu usage information et al. for a single
+        CPU.
+
+        This consists of a simple graphic, with a single vertical
+        "progress bar" (labelled as appropriate) and two numbers
+        below: the exact percentage usage and the current temperature,
+        if available.
+        """
+        def __init__(self,processor):
+            QWidget.__init__(self)
+            self.processor=processor
+            #add me to the hook
+
+    class ProcessorView(QWidget):
+        """A widget to view processor information for multiple
+        processors.
+        
+        This will normally be significantly wider than it is tall, as
+        it consists simply of a horizontal row of CPUViews.
+        """
+        def __init__(self):
+            QWidget.__init__(self)
+            layout=QHBoxLayout()
+            self.setLayout(layout)
+            #for each cpu...
+            for processor in local.processors():
+                layout.addWidget(CPUView(local.processor(processor.name())))
+
+    class MemoryView(QWidget):
+        """A widget to display the current memory usage in a memory
+        bank (RAM).
+
+        """
+        def __init__(self,memory):
+            QWidget.__init__(self)
+            self.memory=memory
+
+    class OverviewView(QFrame):
+        """Displays current information for the most general (and
+        critical) parts of the system
+
+        This generally means the processors, memory, and hard disk
+        usage.
+        """
+        def __init__(self):
+            QFrame.__init__(self)
+            self.setLineWidth(2);
+            self.setFrameStyle(self.StyledPanel | QFrame.Raised)
+            layout=QHBoxLayout()
+            self.setLayout(layout)
+            layout.addWidget(ProcessorView())
+            layout.addWidget(MemoryView(local.memory()))
+
+    class HistoryView(QFrame):
+        """Displays most of OverviewView's content, as a history.
+
+        This view consists of a set of a few graphs, each containing
+        in somewhat condensed for the history of some measure of
+        performance. A single pixel is used for every related update
+        fired.
+        """
+        def __init__(self):
+            QFrame.__init__(self)
+
+    class MainView(QWidget):
+        def __init__(self):
+            QWidget.__init__(self)
+            layout=QVBoxLayout()
+            self.setLayout(layout)
+            layout.addWidget(OverviewView())
+            layout.addWidget(QLabel("ho"))
 
     class MainWindow(QMainWindow):
         def __init__(self):
@@ -145,7 +228,7 @@ else:
             self.helpMenu.addAction(self.aboutQtAct)
         
         def createLayout(self):
-            pass
+            self.setCentralWidget(MainView())
 
         def createStatusBar(self):
             self.statusBar().showMessage("Ready")
