@@ -4,6 +4,21 @@ YASMon \- Yet another system monitor
 .SH SYNOPSIS
 .B yasmon
 [\fI-d DELAY\fR] [\fI-l | -c\fR]
+.SH DESCRIPTION
+\fByasmon\fR can act as a client to either a \fByasmond\fR instance
+hosted on another computer, or a simulated local instance. In log mode
+(\fB\-l\fR), current information about the system is periodically
+printed to standard output. In curses mode (\fB\-c\fR), a top-like
+ncurses interface displays current system statistics as well as
+long-term averages. The default, regular or QT mode, displays
+essentially the same information as curses mode but with a nicer
+interface, and more visual alerts when things seem to go wrong.
+
+For remote systems, log mode displays the server name at the beginning
+of each line, without reducing the number of lines displayed for each
+server. Curses mode allows the user to switch between servers. The
+default mode displays a summary of each server's information, all on
+one screen, without allowing a more detailed view.
 .SH OPTIONS
 .TP
 \fB\-\-version\fR
@@ -16,12 +31,17 @@ show this help message and exit
 Display a curses interface
 .TP
 \fB\-d\fR DELAY, \fB\-\-delay\fR=\fIDELAY\fR
-Delay between updates, in seconds (may be decimal).
+Delay between ordinary updates, in seconds (may be decimal).
 Default: 5
 .TP
 \fB\-\-fs\-delay\fR=\fIFS_DELAY\fR
 Delay between filesystem updates, in seconds (may be
 decimal). Default: 120
+
+There is no extra effort involved in filesystem updates - this number
+is only set high by default to allow the user to view a large history
+(for reasonable display widths). If YASMon is consuming too many
+resources, tweak the normal delay.
 .TP
 \fB\-l\fR, \fB\-\-log\fR
 Log events to standard output
@@ -29,6 +49,8 @@ Log events to standard output
 .TP
 \fB/etc/yasmon.conf
 Configuration file for YASMon client.
+.SH SEE ALSO
+\fByasmon.conf\fR(5), \fByasmond\fR(1)
 .SH AUTHOR
 Written by Scott Lawrence <bytbox@gmail.com>
 .SH COPYRIGHT

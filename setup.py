@@ -33,5 +33,6 @@ setup(name='YASMon',
       requires=['PyQt4'],
       packages=['sysmon'],
       scripts=['yasmon'],
-      data_files=[('/usr/share/man/man1',['yasmon.1','yasmond.1'])]
+      data_files=[('/usr/share/man/man1',['yasmon.1','yasmond.1']),
+                  ('/usr/share/man/man5',['yasmon.conf.5'])]
       )
