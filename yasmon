@@ -127,10 +127,45 @@ elif options.log:
 
 else:
     #GUI Code for YASMon client (uses QT4)
-    from PyQt4 import QtCore
+    from PyQt4.QtCore import *
     from PyQt4.QtGui import *
 
-    class CPUView(QWidget):
+    class ScaleView(QWidget):
+        """A widget to view information on a scale, with details
+        below.
+
+        """
+        def __init__(self,name,min=0,max=100,suffix="%",default=0):
+            QWidget.__init__(self)
+            self.name=name
+            self.min=min
+            self.max=max
+            self._value=default
+            self.suffix=suffix
+
+        def value(self):
+            return self._value
+
+        def set_value(self,value):
+            self._value=value
+
+        def paintEvent(self,event):
+            #settings
+            painter=QPainter(self)
+            painter.setPen(QPen())
+            painter.setBrush(QBrush())
+            painter.setRenderHint(QPainter.Antialiasing)
+
+            painter.drawText(QRect(0,0,70,80),
+                             Qt.AlignHCenter | Qt.AlignBottom,
+                             self.name+"\n"+str(self.value())+
+                             self.suffix)
+
+        def sizeHint(self):
+            return QSize(70,100)
+
+
+    class CPUView(ScaleView):
         """A widget to view cpu usage information et al. for a single
         CPU.
 
@@ -138,11 +173,16 @@ else:
         "progress bar" (labelled as appropriate) and two numbers
         below: the exact percentage usage and the current temperature,
         if available.
+
+        Although this view is meant for a single CPU, it may actually
+        represent multiple CPUs, depending on the implementation of
+        the backend object.
         """
         def __init__(self,processor):
-            QWidget.__init__(self)
+            ScaleView.__init__(self,processor.name())
             self.processor=processor
             #add me to the hook
+
 
     class ProcessorView(QWidget):
         """A widget to view processor information for multiple
@@ -159,13 +199,13 @@ else:
             for processor in local.processors():
                 layout.addWidget(CPUView(local.processor(processor.name())))
 
-    class MemoryView(QWidget):
+    class MemoryView(ScaleView):
         """A widget to display the current memory usage in a memory
         bank (RAM).
 
         """
         def __init__(self,memory):
-            QWidget.__init__(self)
+            ScaleView.__init__(self,"ram")
             self.memory=memory
 
     class OverviewView(QFrame):
