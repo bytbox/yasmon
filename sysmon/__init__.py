@@ -10,3 +10,5 @@ def version():
     """Returns, as a string, the current version of this package.
     """
     return '0.0.0'
+
+

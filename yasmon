@@ -126,126 +126,13 @@ elif options.log:
 
 
 else:
-    #GUI Code for YASMon client (uses QT4)
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
+    from sysmon import gui
 
-    class ScaleView(QWidget):
-        """A widget to view information on a scale, with details
-        below.
+    gui.set_local_system(local)
 
-        """
-        def __init__(self,name,min=0,max=100,suffix="%",default=0):
-            QWidget.__init__(self)
-            self.name=name
-            self.min=min
-            self.max=max
-            self._value=default
-            self.suffix=suffix
-
-        def value(self):
-            return self._value
-
-        def set_value(self,value):
-            self._value=value
-
-        def paintEvent(self,event):
-            #settings
-            painter=QPainter(self)
-            painter.setPen(QPen())
-            painter.setBrush(QBrush())
-            painter.setRenderHint(QPainter.Antialiasing)
-
-            painter.drawText(QRect(0,0,70,80),
-                             Qt.AlignHCenter | Qt.AlignBottom,
-                             self.name+"\n"+str(self.value())+
-                             self.suffix)
-
-        def sizeHint(self):
-            return QSize(70,100)
-
-
-    class CPUView(ScaleView):
-        """A widget to view cpu usage information et al. for a single
-        CPU.
-
-        This consists of a simple graphic, with a single vertical
-        "progress bar" (labelled as appropriate) and two numbers
-        below: the exact percentage usage and the current temperature,
-        if available.
-
-        Although this view is meant for a single CPU, it may actually
-        represent multiple CPUs, depending on the implementation of
-        the backend object.
-        """
-        def __init__(self,processor):
-            ScaleView.__init__(self,processor.name())
-            self.processor=processor
-            #add me to the hook
-
-
-    class ProcessorView(QWidget):
-        """A widget to view processor information for multiple
-        processors.
-        
-        This will normally be significantly wider than it is tall, as
-        it consists simply of a horizontal row of CPUViews.
-        """
+    class MainWindow(gui.QMainWindow):
         def __init__(self):
-            QWidget.__init__(self)
-            layout=QHBoxLayout()
-            self.setLayout(layout)
-            #for each cpu...
-            for processor in local.processors():
-                layout.addWidget(CPUView(local.processor(processor.name())))
-
-    class MemoryView(ScaleView):
-        """A widget to display the current memory usage in a memory
-        bank (RAM).
-
-        """
-        def __init__(self,memory):
-            ScaleView.__init__(self,"ram")
-            self.memory=memory
-
-    class OverviewView(QFrame):
-        """Displays current information for the most general (and
-        critical) parts of the system
-
-        This generally means the processors, memory, and hard disk
-        usage.
-        """
-        def __init__(self):
-            QFrame.__init__(self)
-            self.setLineWidth(2);
-            self.setFrameStyle(self.StyledPanel | QFrame.Raised)
-            layout=QHBoxLayout()
-            self.setLayout(layout)
-            layout.addWidget(ProcessorView())
-            layout.addWidget(MemoryView(local.memory()))
-
-    class HistoryView(QFrame):
-        """Displays most of OverviewView's content, as a history.
-
-        This view consists of a set of a few graphs, each containing
-        in somewhat condensed for the history of some measure of
-        performance. A single pixel is used for every related update
-        fired.
-        """
-        def __init__(self):
-            QFrame.__init__(self)
-
-    class MainView(QWidget):
-        def __init__(self):
-            QWidget.__init__(self)
-            layout=QVBoxLayout()
-            self.setLayout(layout)
-            layout.addWidget(OverviewView())
-            layout.addWidget(QLabel("ho"))
-
-    class MainWindow(QMainWindow):
-        def __init__(self):
-            QMainWindow.__init__(self)
+            gui.QMainWindow.__init__(self)
             self.createActions()
             self.createMenus()
             self.createLayout()
@@ -257,12 +144,12 @@ else:
                               "<b>YASMon v"+sysmon.version())
 
         def createActions(self):
-            self.aboutAct=QAction("&About YASMon",self,
+            self.aboutAct=gui.QAction("&About YASMon",self,
                                   statusTip="Display YASMon's About box",
                                   triggered=self.about)
-            self.aboutQtAct=QAction("About &Qt", self,
+            self.aboutQtAct=gui.QAction("About &Qt", self,
                                     statusTip="Show the Qt library's About box",
-                                    triggered=qApp.aboutQt)
+                                    triggered=gui.qApp.aboutQt)
         
         def createMenus(self):
             self.helpMenu=self.menuBar().addMenu("&Help")
@@ -272,12 +159,12 @@ else:
             self.helpMenu.addAction(self.aboutQtAct)
         
         def createLayout(self):
-            self.setCentralWidget(MainView())
+            self.setCentralWidget(gui.MainView())
 
         def createStatusBar(self):
             self.statusBar().showMessage("Ready")
-    
-    app = QApplication(sys.argv)
+            
+    app = gui.QApplication(sys.argv)
     win = MainWindow()
     win.setWindowTitle("YASMon")
     win.show()

@@ -1,0 +1,11 @@
+#!/usr/bin/env xdg-open
+# KDE Config File
+[Desktop Entry]
+Type=Application
+Exec=yasmon
+Icon=yasmon
+X-DocPath=yasmon/index.html
+Terminal=false
+Name=Yet Another System Monitor
+GenericName=System Monitor
+Categories=Qt;KDE;System;
