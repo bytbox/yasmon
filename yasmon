@@ -140,8 +140,7 @@ else:
 
         #actions
         def about(self):
-            QMessageBox.about(self, "About YASMon",
-                              "<b>YASMon v"+sysmon.version())
+            gui.about_yasmon(self)
 
         def createActions(self):
             self.aboutAct=gui.QAction("&About YASMon",self,

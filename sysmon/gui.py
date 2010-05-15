@@ -24,11 +24,18 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
+import sysmon
+
 local=None
 
 def set_local_system(lsys):
     global local
     local=lsys
+
+def about_yasmon(parent):
+    QMessageBox.about(parent, "About YASMon",
+                      "<b>YASMon v"+sysmon.version())
+
 
 class ScaleView(QWidget):
     """A widget to view information on a scale, with details

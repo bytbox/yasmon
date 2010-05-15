@@ -35,5 +35,6 @@ setup(name='YASMon',
       scripts=['yasmon'],
       data_files=[('/usr/share/man/man1',['yasmon.1','yasmond.1']),
                   ('/usr/share/man/man5',['yasmon.conf.5']),
-                  ('/usr/share/applications',['yasmon.desktop'])]
+                  ('/usr/share/applications',['yasmon.desktop']),
+                  ('/etc',['etc/yasmon.conf'])]
       )
