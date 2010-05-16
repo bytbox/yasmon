@@ -32,7 +32,7 @@ setup(name='YASMon',
       url='http://github.com/bytbox/yasmon',
       requires=['PyQt4'],
       packages=['sysmon'],
-      scripts=['yasmon'],
+      scripts=['yasmon','yasmond'],
       data_files=[('/usr/share/man/man1',['yasmon.1','yasmond.1']),
                   ('/usr/share/applications',['yasmon.desktop']),
       )
