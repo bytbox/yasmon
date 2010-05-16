@@ -3,7 +3,7 @@
 YASMon \- Yet another system monitor
 .SH SYNOPSIS
 .B yasmon
-[\fI-d DELAY\fR] [\fI-l | -c\fR]
+[\fI-d DELAY\fR] [\fI-l | -c\fR] [\fISERVER ...\fR]
 .SH DESCRIPTION
 \fByasmon\fR can act as a client to either a \fByasmond\fR instance
 hosted on another computer, or a simulated local instance. In log mode
@@ -47,17 +47,12 @@ resources, tweak the normal delay.
 Log events to standard output
 .TP
 \fB\-r\fR, \fB\-\-remote\fR 
-Force the use of remote mode, overriding
-the configuration file.
+Use remote mode, connecting to the specified servers.
 .TP
 \fB\-R\fR, \fB\-\-local\fR
-Force the use of local mode, overriding the configuration file.
-.SH FILES
-.TP
-\fB/etc/yasmon.conf
-Configuration file for YASMon client.
+Use local mode, not connecting to any servers.
 .SH SEE ALSO
-\fByasmon.conf\fR(5), \fByasmond\fR(1)
+\fByasmond\fR(1)
 .SH AUTHOR
 Written by Scott Lawrence <bytbox@gmail.com>
 .SH COPYRIGHT
