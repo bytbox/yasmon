@@ -103,7 +103,7 @@ class LocalProcessor(Processor):
                         key=match.group(1)
                         val=match.group(2)
                         self._dict[key]=val
-        self.callback().call("local.processor.updated",self.name())
+        self.callback().call("processor.updated",self)
 
     def modelname(self):
         return self.dict()['model name']
@@ -144,7 +144,7 @@ class LocalMemory(Memory):
                     if match:
                         val=int(match.group(1))*1024*1024
                     self._dict[key]=val
-        self.callback().call("local.memory.updated",None)
+        self.callback().call("memory.updated",self)
 
     def dict(self):
         return self._dict
@@ -178,7 +178,7 @@ class LocalFilesystem(Filesystem):
         Filesystem.__init__(self)
 
     def do_update(self):
-        self.callback().call("local.filesystem.updated",None)
+        self.callback().call("filesystem.updated",self)
 
 
 class LocalProcessList(ProcessList):
@@ -192,7 +192,7 @@ class LocalProcessList(ProcessList):
         ProcessList.__init__(self)
 
     def do_update(self):
-        self.callback().call("local.processlist.updated",None)
+        self.callback().call("processlist.updated",self)
 
 
 class LocalProcess(Process):

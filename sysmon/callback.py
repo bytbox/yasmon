@@ -49,11 +49,12 @@ class SysmonCallback:
         else:
             self.hooks[name]=[func]
 
-    def call(self,name,data):
-        """Calls all hooks matching the string with the given data.
+    def call(self,name,part):
+        """Calls all hooks matching the string with the given data
+        (usually the caller).
 
         The hooks are called in the order they were created.
         """
         if name in self.hooks:
             for func in self.hooks[name]:
-                func(data)
+                func(part)

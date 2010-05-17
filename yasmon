@@ -63,21 +63,32 @@ if options.local_mode:
 #callback
 callback=sysmon.callback.SysmonCallback()
 def handle_misc_update(data):
-    print "misc.updated: ",data
+    print "Miscellaneous update: ",data
 callback.hook("misc.updated",handle_misc_update)
-callback.hook("local.misc.updated",
-              (lambda data: sys.stdout.write("local.misc.updated\n")))
-#just local for now
-local=sysmon.local.get_local()
-local.set_delay(float(options.delay))
-local.set_callback(callback)
-#set special delays
-for fs in local.filesystems():
-    fs.set_delay(float(options.fs_delay))
+
+#handle strange updates
+callback.hook("misc.updated",
+              handle_misc_update)
+
+
+systems={}
+if mode=="local":
+    local=sysmon.local.get_local()
+    local.set_delay(float(options.delay))
+    local.set_callback(callback)
+    #set special delays
+    for fs in local.filesystems():
+        fs.set_delay(float(options.fs_delay))
+    systems['localhost']=local
+
+elif mode=="remote":
+    #note: do NOT assume localhost to be one of the systems!
+    pass
 
 #start the UI
 if options.curses:
-    #FIXME
+    #FIXME implement a decent curses interface, as specified in the
+    #man pages
     sys.stderr.write("Curses not supported\n")
     exit(-1)
 
@@ -85,18 +96,17 @@ elif options.log:
     #logging version
 
     #hooks
-    def local_handle_processor_update(name):
-        p=local.processor(name)
+    def handle_processor_update(p):
         print "%s \"%s\": " % (p.name(),p.modelname())
-    def local_handle_memory_update(data):
-        mem=local.memory()
+    def handle_memory_update(mem):
         print "mem: %f%%" % (100*float(mem.active_memory())/float(mem.total_memory()))
 
-    #register hooks
-    callback.hook("local.processor.updated",local_handle_processor_update)
-    callback.hook("local.memory.updated",local_handle_memory_update)
 
-    #run
+    #register hooks
+    callback.hook("processor.updated",handle_processor_update)
+    callback.hook("memory.updated",handle_memory_update)
+
+    #run all systems
     local.run()
     #now wait
     try:

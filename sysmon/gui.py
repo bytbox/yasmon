@@ -16,7 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>. #
 #########################################################################
 
-"""Provides a framework for a graphical user interface to YASMon.
+"""Provides a framework for a graphical user interface to YASMon,
+using Qt4.
 
 """
 
@@ -27,12 +28,24 @@ from PyQt4.QtGui import *
 import sysmon
 
 local=None
+systems={}
 
 def set_local_system(lsys):
+    """Deprecated. Use set_systems instead.
+    """
     global local
     local=lsys
 
+def set_systems(syslist):
+    """Sets the systems monitored by YASMon, given an associative
+    array.
+    """
+    global systems
+    systems=syslist
+
 def about_yasmon(parent):
+    """Displays an "About YASMon" dialog box.
+    """
     QMessageBox.about(parent, "About YASMon",
                       "<b>YASMon v"+sysmon.version())
 
@@ -131,7 +144,7 @@ class LocalMemoryView(MemoryView):
     
     def __init__(self):
         MemoryView.__init__(self,local.memory())
-        local.callback().hook('local.memory.updated',self.catch_update)
+        local.callback().hook('memory.updated',self.catch_update)
         
     def catch_update(self,data):
         self.set_value(int(float(self.memory.active_memory())*1000.0
