@@ -83,7 +83,12 @@ if mode=="local":
 
 elif mode=="remote":
     #note: do NOT assume localhost to be one of the systems!
-    pass
+    if len(args)==0:
+        print "yasmon: error: no remote systems specified"
+        exit(-1)
+    for sysname in args:
+        print sysname
+
 
 #start the UI
 if options.curses:
