@@ -102,7 +102,7 @@ elif options.log:
 
     #hooks
     def handle_processor_update(p):
-        print "%s \"%s\": " % (p.name(),p.modelname())
+        print "%s: %f" % (p.name(),p.usage()/p.max_freq())
     def handle_memory_update(mem):
         print "mem: %f%%" % (100*float(mem.active_memory())/float(mem.total_memory()))
 

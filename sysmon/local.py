@@ -80,6 +80,10 @@ class LocalProcessor(Processor):
         self._id=id
         self._dict=dict()
 
+        #history-keeping for calculation (math: a crude hack that works)
+        self._totalusage=0
+        self._totalidle=0
+
     def name(self):
         return self._name
 
@@ -88,6 +92,7 @@ class LocalProcessor(Processor):
 
     def do_update(self):
         ignoring=True
+        #learn about our cpus
         with open("/proc/cpuinfo") as cpuinfo:
             for line in cpuinfo:
                 match=re.match("processor[ \t]*:[ \t]*([0-9]+)",line)
@@ -103,19 +108,42 @@ class LocalProcessor(Processor):
                         key=match.group(1)
                         val=match.group(2)
                         self._dict[key]=val
-        self.callback().call("processor.updated",self)
+
+        #now look up our cpu's statistics
+        with open("/proc/stat") as stat:
+            for line in stat:
+                match=re.match("%s[ \\t]+([0-9]+)[ \\t]+([0-9]+)[ \\t]+([0-9]+)[ \\t]+([0-9]+)[ \\t]+"
+                         % self._name,line)
+                if match:
+                    usage=int(match.group(1))+int(match.group(2))+int(match.group(3))
+                    idle=int(match.group(4))
+                    #update our current statistics
+                    newusage=usage-self._totalusage
+                    newidle=idle-self._totalidle
+                    pu=newusage/float(newusage+newidle)
+                    #will this cause a problem with variable frequency cpus?
+                    self.dict()['usage']=pu*self.max_freq()
+                    self._totalusage=usage
+                    self._totalidle=idle
+        self.callback().call("processor.%s.updated" % self.name(),self)
 
     def modelname(self):
         return self.dict()['model name']
 
     def max_freq(self):
-        return self.freq() #FIXME
+        mf=self.freq() #if nothing else is found
+        #check the model name
+        mn=self.modelname()
+        match=re.search('([0-9.]+)GHz',mn)
+        if match:
+            mf=float(match.group(1))*1000
+        return float(mf)
 
     def freq(self):
         return self.dict()['cpu MHz']
 
     def usage(self):
-        return 0 #FIXME
+        return float(self.dict()['usage'])
 
 
 class LocalMemory(Memory):

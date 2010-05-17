@@ -54,8 +54,12 @@ class ScaleView(QWidget):
         return self._value
 
     def set_max(self,maxval):
+        """Sets the maximum value.
+        """
         self.max=maxval
     def set_min(self,minval):
+        """Sets the minimum value.
+        """
         self.min=minval
 
     def set_value(self,value):
@@ -73,11 +77,12 @@ class ScaleView(QWidget):
         painter=QPainter(self)
         painter.setPen(QPen())
         painter.setBrush(QBrush())
-        painter.setRenderHint(QPainter.Antialiasing)
 
+        #draw the scale
         painter.drawRect(QRect(10,0,50,64))
         height=(float(self.value())-self.min)*64.0/self.max
-        painter.fillRect(QRect(10,64,50,-height),QColor.fromRgb(height*4,0,0))
+        painter.fillRect(QRect(10,64,50,-height),QColor.fromRgb(height*3.9,0,0))
+        #draw the text
         painter.drawText(QRect(0,0,70,100),
                          Qt.AlignHCenter | Qt.AlignBottom,
                          self.name+"\n"+str(float(int((self.value()-self.min)*1000.0/self.max))/10)+'%')
@@ -103,9 +108,15 @@ class CPUView(ScaleView):
     the backend object.
     """
     def __init__(self,processor):
-        ScaleView.__init__(self,processor.name())
+        ScaleView.__init__(self,processor.name(),0,1,"MHz used")
         self.processor=processor
         #add me to the hook
+        processor.system().callback().hook("processor.%s.updated" % processor.name()
+                                           ,self.catch_update)
+
+    def catch_update(self,processor):
+        self.set_max(self.processor.max_freq())
+        self.set_value(self.processor.usage())
         
 
 class ProcessorView(QWidget):
