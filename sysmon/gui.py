@@ -39,13 +39,14 @@ class ScaleView(QWidget):
     below.
     
     """
-    def __init__(self,name,min=0,max=100,suffix="%",default=0):
+    def __init__(self,name,min=0,max=100,unit='%',default=0):
         QWidget.__init__(self)
         self.name=name
         self.min=min
         self.max=max
         self._value=default
-        self.suffix=suffix
+        self.unit=unit
+        self.setToolTip("%d/%d %s" % (int(self.value()),int(max),unit))
         
     def value(self):
         """Returns the current value.
@@ -59,6 +60,7 @@ class ScaleView(QWidget):
         updates the onscreen representation.
         """
         self._value=value
+        self.setToolTip("%d/%d %s" % (int(self.value()),int(self.max),self.unit))
         self.update()
         
     def paintEvent(self,event):
@@ -70,11 +72,13 @@ class ScaleView(QWidget):
         
         painter.drawText(QRect(0,0,70,80),
                          Qt.AlignHCenter | Qt.AlignBottom,
-                         self.name+"\n"+str(self.value())+
-                         self.suffix)
+                         self.name+"\n"+str(self.value())+'%')
+
 
     def sizeHint(self):
         return QSize(70,100)
+    def minimumSize(self):
+        return self.sizeHint()
 
 
 class CPUView(ScaleView):
@@ -106,6 +110,7 @@ class ProcessorView(QWidget):
     def __init__(self,processorlist):
         QWidget.__init__(self)
         layout=QHBoxLayout()
+        layout.setMargin(0)
         self.setLayout(layout)
         #for each cpu...
         for processor in processorlist:
