@@ -53,6 +53,11 @@ class ScaleView(QWidget):
         """
         return self._value
 
+    def set_max(self,maxval):
+        self.max=maxval
+    def set_min(self,minval):
+        self.min=minval
+
     def set_value(self,value):
         """Sets the value to be displayed.
         
@@ -69,10 +74,13 @@ class ScaleView(QWidget):
         painter.setPen(QPen())
         painter.setBrush(QBrush())
         painter.setRenderHint(QPainter.Antialiasing)
-        
-        painter.drawText(QRect(0,0,70,80),
+
+        painter.drawRect(QRect(10,0,50,64))
+        height=(float(self.value())-self.min)*64.0/self.max
+        painter.fillRect(QRect(10,64,50,-height),QColor.fromRgb(height*4,0,0))
+        painter.drawText(QRect(0,0,70,100),
                          Qt.AlignHCenter | Qt.AlignBottom,
-                         self.name+"\n"+str(self.value())+'%')
+                         self.name+"\n"+str(float(int((self.value()-self.min)*1000.0/self.max))/10)+'%')
 
 
     def sizeHint(self):
@@ -122,14 +130,13 @@ class MemoryView(ScaleView):
     
     """
     def __init__(self,memory):
-        ScaleView.__init__(self,"ram")
+        ScaleView.__init__(self,"ram",0,1,'MB')
         self.memory=memory
         memory.system().callback().hook('memory.updated',self.catch_update)
 
     def catch_update(self,data):
-        self.set_value(int(float(self.memory.active_memory())*1000.0
-                           /float(self.memory.total_memory()))/10.0)
-        print self.value()
+        self.set_max(self.memory.total_memory()/1000000)
+        self.set_value(self.memory.active_memory()/1000000)
 
 
 class SystemView(QGroupBox):
