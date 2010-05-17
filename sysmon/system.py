@@ -29,7 +29,7 @@ class System():
 
     """
     
-    def __init__(self):
+    def __init__(self,name="no-name"):
         self.lock=Lock()
         self._processors=[]
         self._memory=Memory.null()
@@ -39,6 +39,12 @@ class System():
         self._delay=5 #the update interval in seconds
         self._callback=callback.SysmonCallback()
         self._timers=[]
+        self._name=name
+
+    def name(self):
+        """Returns the identifying name of the system.
+        """
+        return self._name
 
     def run(self):
         """Runs the system monitor.

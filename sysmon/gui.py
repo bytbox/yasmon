@@ -127,7 +127,7 @@ class MemoryView(ScaleView):
         print self.value()
 
 
-class OverviewView(QFrame):
+class SystemView(QFrame):
     """Displays current information for the most general (and
     critical) parts of a single system.
     
@@ -161,6 +161,6 @@ class MainView(QWidget):
         self.setLayout(layout)
         for system in systems:
             print system
-            layout.addWidget(OverviewView(systems[system]))
+            layout.addWidget(SystemView(systems[system]))
         layout.addWidget(QLabel("Tabs for HistoryView here! (TODO)"))
         
