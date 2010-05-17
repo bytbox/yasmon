@@ -48,15 +48,15 @@ parser.add_option("-l","--log",
                   action="store_true",dest="log",
                   help="Log events to standard output")
 parser.add_option("-r","--remote",action="store_true",
-                  dest="remote_mode",help="Use remote mode (default)")
+                  dest="remote_mode",help="Use remote mode")
 parser.add_option("-R","--local",action="store_true",
-                  dest="local_mode",help="Use local mode")
+                  dest="local_mode",help="Use local mode (default)")
 (options,args)=parser.parse_args()
 
 
-mode="remote"
-if options.local_mode:
-    mode="local"
+mode="local"
+if options.remote_mode:
+    mode="remote"
 
 
 #initialize the monitor
@@ -107,21 +107,22 @@ elif options.log:
     callback.hook("memory.updated",handle_memory_update)
 
     #run all systems
-    local.run()
+    for system in systems:
+        systems[system].run()
+
     #now wait
     try:
         while True:
             time.sleep(500)
     except KeyboardInterrupt:
         #stop all the daemons
-        local.acquire()
+        for system in systems:
+            systems[system].acquire()
         print "Bye!"
 
 
 else:
     from sysmon import gui
-
-    gui.set_local_system(local)
 
     class MainWindow(gui.QMainWindow):
         def __init__(self):
@@ -151,7 +152,7 @@ else:
             self.helpMenu.addAction(self.aboutQtAct)
         
         def createLayout(self):
-            self.setCentralWidget(gui.MainView())
+            self.setCentralWidget(gui.MainView(systems))
 
         def createStatusBar(self):
             self.statusBar().showMessage("Ready")
@@ -161,7 +162,9 @@ else:
     win.setWindowTitle("YASMon")
     win.show()
     #run sysmon
-    local.run()
+    for system in systems:
+        systems[system].run()
+
     sys.exit(app.exec_())
 
 

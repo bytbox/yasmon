@@ -27,22 +27,6 @@ from PyQt4.QtGui import *
 
 import sysmon
 
-local=None
-systems={}
-
-def set_local_system(lsys):
-    """Deprecated. Use set_systems instead.
-    """
-    global local
-    local=lsys
-
-def set_systems(syslist):
-    """Sets the systems monitored by YASMon, given an associative
-    array.
-    """
-    global systems
-    systems=syslist
-
 def about_yasmon(parent):
     """Displays an "About YASMon" dialog box.
     """
@@ -119,13 +103,13 @@ class ProcessorView(QWidget):
     This will normally be significantly wider than it is tall, as
     it consists simply of a horizontal row of CPUViews.
     """
-    def __init__(self):
+    def __init__(self,processorlist):
         QWidget.__init__(self)
         layout=QHBoxLayout()
         self.setLayout(layout)
         #for each cpu...
-        for processor in local.processors():
-            layout.addWidget(CPUView(local.processor(processor.name())))
+        for processor in processorlist:
+            layout.addWidget(CPUView(processor))
             
 class MemoryView(ScaleView):
     """A widget to display the current memory usage in a memory
@@ -135,59 +119,48 @@ class MemoryView(ScaleView):
     def __init__(self,memory):
         ScaleView.__init__(self,"ram")
         self.memory=memory
+        memory.system().callback().hook('memory.updated',self.catch_update)
 
-class LocalMemoryView(MemoryView):
-    """A widget to display the current memory usage in the local
-    RAM.
-    
-    """
-    
-    def __init__(self):
-        MemoryView.__init__(self,local.memory())
-        local.callback().hook('memory.updated',self.catch_update)
-        
     def catch_update(self,data):
         self.set_value(int(float(self.memory.active_memory())*1000.0
                            /float(self.memory.total_memory()))/10.0)
         print self.value()
-        
-class RemoteMemoryView(MemoryView):
-    """A widget to display the current memory usage in remote RAM.
-    """
-    pass
+
 
 class OverviewView(QFrame):
     """Displays current information for the most general (and
-    critical) parts of the system
+    critical) parts of a single system.
     
     This generally means the processors, memory, and hard disk
     usage.
     """
-    def __init__(self):
+    def __init__(self,system):
         QFrame.__init__(self)
         self.setLineWidth(2);
         self.setFrameStyle(self.StyledPanel | QFrame.Raised)
         layout=QHBoxLayout()
         self.setLayout(layout)
-        layout.addWidget(ProcessorView())
-        layout.addWidget(LocalMemoryView())
+        layout.addWidget(ProcessorView(system.processors()))
+        layout.addWidget(MemoryView(system.memory()))
         
 class HistoryView(QFrame):
     """Displays most of OverviewView's content, as a history.
     
-    This view consists of a set of a few graphs, each containing
-    in somewhat condensed for the history of some measure of
-    performance. A single pixel is used for every related update
-    fired.
+    This view consists of a set of a few graphs, each containing in
+    somewhat condensed for the history of some measure of
+    performance. In general, single pixel is used for every related
+    update fired.
     """
     def __init__(self):
         QFrame.__init__(self)
         
 class MainView(QWidget):
-    def __init__(self):
+    def __init__(self,systems):
         QWidget.__init__(self)
         layout=QVBoxLayout()
         self.setLayout(layout)
-        layout.addWidget(OverviewView())
-        layout.addWidget(QLabel("ho"))
+        for system in systems:
+            print system
+            layout.addWidget(OverviewView(systems[system]))
+        layout.addWidget(QLabel("Tabs for HistoryView here! (TODO)"))
         
