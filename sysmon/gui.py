@@ -127,7 +127,7 @@ class MemoryView(ScaleView):
         print self.value()
 
 
-class SystemView(QFrame):
+class SystemView(QGroupBox):
     """Displays current information for the most general (and
     critical) parts of a single system.
     
@@ -135,9 +135,7 @@ class SystemView(QFrame):
     usage.
     """
     def __init__(self,system):
-        QFrame.__init__(self)
-        self.setLineWidth(2);
-        self.setFrameStyle(self.StyledPanel | QFrame.Raised)
+        QFrame.__init__(self,system.name())
         layout=QHBoxLayout()
         self.setLayout(layout)
         layout.addWidget(ProcessorView(system.processors()))

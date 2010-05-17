@@ -27,7 +27,7 @@ from system import *;
 def get_local():
     """Returns an object representing the local system.
     """
-    system=LocalSystem()
+    system=LocalSystem("localhost")
 
     #create the processors
     cpuinfo=file("/proc/cpuinfo")
@@ -58,13 +58,13 @@ class LocalSystem(System):
     """Represents a local system.
 
     """
-    def __init__(self):
+    def __init__(self,name="localhost"):
         """Creates an empty local system.
 
         This constructor does not initialize the local system - that
         is done with the get_local() method.
         """
-        System.__init__(self)
+        System.__init__(self,name)
 
 
 class LocalProcessor(Processor):
