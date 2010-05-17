@@ -172,7 +172,20 @@ class HistoryView(QFrame):
     performance. In general, single pixel is used for every related
     update fired.
     """
-    def __init__(self):
+    def __init__(self,system):
+        QFrame.__init__(self)
+
+class TopView(QFrame):
+    """Displays a top-like view of a system.
+    """
+    def __init__(self,system):
+        QFrame.__init__(self)
+
+class DetailedSystemView(QFrame):
+    """Displays a detailed system view, consisting of a HistoryView
+    and a TopView.
+    """
+    def __init__(self,system):
         QFrame.__init__(self)
         
 class MainView(QWidget):
@@ -180,8 +193,12 @@ class MainView(QWidget):
         QWidget.__init__(self)
         layout=QVBoxLayout()
         self.setLayout(layout)
+        tabWidget=QTabWidget()
+        tabWidget.setTabPosition(QTabWidget.South)
         for system in systems:
-            print system
+            tabid=tabWidget.addTab(DetailedSystemView(systems[system]),QString(system))
+            tabWidget.setTabToolTip(tabid,QString("View information for %s" % system))
+            #FIXME - set icon
             layout.addWidget(SystemView(systems[system]))
-        layout.addWidget(QLabel("Tabs for HistoryView here! (TODO)"))
+        layout.addWidget(tabWidget)
         
