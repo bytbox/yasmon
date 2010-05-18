@@ -211,13 +211,18 @@ class SystemPart():
         setting), so there is ordinarily no reason to call it from
         outside of the system.
         """
+        #make sure we have a valid delay
+        if not self.delay():
+            self.set_delay(self.system().delay())
+        #don't do anything if we're weird
+        if self.delay()==-1:
+            return
+
         #acquire the lock
         self.system().acquire()
         #do the wuhk
         self.do_update()
         #reset the timer
-        if not self.delay():
-            self.set_delay(self.system().delay())
         self.timer=Timer(self.delay(),self.update)
         self.timer.daemon=True
         self.timer.start()

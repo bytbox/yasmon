@@ -40,18 +40,43 @@ parser.add_option("-p","--port",dest="port",default='61874',
 # (maintainer note - the port default comes from the sha1sum of YASMon
 # with no newline)
 (options,args)=parser.parse_args()
+
+#initialize the monitor
+callback=sysmon.callback.SysmonCallback()
+system=sysmon.local.get_local()
+system.set_delay(-1)
+system.set_callback(callback)
+#we don't call run() - there's nothing to run! just wait
+
+#open the sockets
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(('',int(options.port)))
 s.listen(2)
 
+mutex=thread.allocate_lock()
+
 def handle_conn(conn,addr):
+    global outfile
     #tell the admin
     print "Handling connection from %s" % addr
     #make a file for easy stuff
     f=conn.makefile()
+    #for each request
     for x in f:
+        #make one line
         x=re.sub("[\n\r]","",x)
         print "Telling %s about %s" % (addr,x)
+        with mutex:
+            outfile=f
+            if x=='filesystem':
+                #filesystems
+                pass
+            elif x=='all':
+                #everything
+                system.update()
+            else:
+                #assume everything but the filesystem
+                pass
     conn.close()
     print "%s left" % addr
 
@@ -63,10 +88,7 @@ try:
 except:
     print "Exception occured!"
 
+#stop the daemon
+system.acquire()
 s.close()
-
-# while 1:
-#     data = conn.recv(1024)
-#     if not data: break
-#     conn.send(data)
 
