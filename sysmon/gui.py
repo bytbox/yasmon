@@ -79,9 +79,9 @@ class ScaleView(QWidget):
         painter.setBrush(QBrush())
 
         #draw the scale
-        painter.drawRect(QRect(10,0,50,64))
+        painter.drawRect(QRect(7,0,56,64))
         height=(float(self.value())-self.min)*64.0/self.max
-        painter.fillRect(QRect(10,64,50,-height),QColor.fromRgb(height*3.9,0,0))
+        painter.fillRect(QRect(7,64,56,-height),QColor.fromRgb(height*3.9,0,0))
         #draw the text
         painter.drawText(QRect(0,0,70,100),
                          Qt.AlignHCenter | Qt.AlignBottom,
@@ -162,6 +162,7 @@ class SystemView(QGroupBox):
         layout=QHBoxLayout()
         self.setLayout(layout)
         layout.addWidget(ProcessorView(system.processors()))
+        layout.addSpacing(16)
         layout.addWidget(MemoryView(system.memory()))
         
 class HistoryView(QFrame):
