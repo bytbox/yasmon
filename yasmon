@@ -19,9 +19,7 @@
 #########################################################################
 
 from optparse import OptionParser
-import shlex
-import sys
-import time
+import shlex,sys,time
 
 import sysmon,sysmon.local,sysmon.remote,sysmon.callback
 
