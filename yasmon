@@ -23,7 +23,7 @@ import shlex
 import sys
 import time
 
-import sysmon,sysmon.local,sysmon.callback
+import sysmon,sysmon.local,sysmon.remote,sysmon.callback
 
 #parse the options
 parser=OptionParser(usage="usage: %prog [-d DELAY] [-l | -c] [SERVER ...]",
