@@ -90,6 +90,7 @@ elif mode=="remote":
 
 #start the UI
 if options.curses:
+    from sysmon import curses
     #FIXME implement a decent curses interface, as specified in the
     #man pages
     sys.stderr.write("Curses not supported\n")
