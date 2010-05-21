@@ -22,6 +22,13 @@ from distutils.core import setup
 
 import sysmon
 
+#generate icon installation list (hicolor)
+iconlist=[]
+for x in [16,22,24,32,36,48,64,72,96,128,192,256]:
+    dest="/usr/share/icons/hicolor/%dx%d/apps" % (x,x)
+    src="gr/%dx%d/yasmon.png" % (x,x)
+    iconlist=iconlist+[(dest,[src])]
+
 setup(name='YASMon',
       version=sysmon.version(),
       description='yet another system monitor',
@@ -37,4 +44,6 @@ setup(name='YASMon',
                   ('/usr/share/applications',['yasmon.desktop']),
                   ('/usr/share/icons/hicolor/scalable/apps',['gr/yasmon.svg']),
                   ('/usr/share/app-install/icons',['gr/yasmon.png']),
-                  ('/usr/share/pixmaps',['gr/yasmon.png'])])
+                  ('/usr/share/pixmaps',['gr/yasmon.png']),
+                  ('/usr/share/icons/hicolor/scalable/apps',
+                   ['gr/yasmon.svg'])]+iconlist)
