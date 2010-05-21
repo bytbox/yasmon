@@ -28,6 +28,7 @@ def get_local():
     """Returns an object representing the local system.
     """
     system=LocalSystem("localhost")
+    uptime=LocalUptime()
 
     #create the processors
     cpuinfo=file("/proc/cpuinfo")
@@ -43,15 +44,18 @@ def get_local():
     #create the filesystems
     partitions=file("/proc/partitions")
     for line in partitions:
-        match=re.match("^[ \t]+([0-9]+)[ \t]+([0-9]+)[ \t]+",line)
+        match=re.match("^[ \t]+([0-9]+)[ \t]+([0-9]+)[ \t]+([0-9]+)[ \t]+([a-z0-9]+)",line)
         if match:
             major=match.group(1)
             minor=match.group(2)
-            system.add_filesystem(LocalFilesystem(major,minor))
+            blocks=match.group(3)
+            name=match.group(4)
+            system.add_filesystem(LocalFilesystem(name))
     partitions.close()
 
     #create the process list
     system.set_processlist(LocalProcessList())
+    system.set_uptime(uptime)
     return system
 
 class LocalSystem(System):
@@ -66,6 +70,22 @@ class LocalSystem(System):
         """
         System.__init__(self,name)
 
+
+class LocalUptime(Uptime):
+    """Represents the local uptime.
+    """
+    def __init__(self):
+        Uptime.__init__(self)
+        self._uptime=0
+
+    def uptime(self):
+        return self._uptime
+
+    def do_update(self):
+        with open("/proc/uptime") as uptime:
+            for line in uptime:
+                self._uptime=float(re.split(" ",line)[0])                
+        self.callback().call("uptime.updated",self)
 
 class LocalProcessor(Processor):
     """Represents a local processor
@@ -199,9 +219,8 @@ class LocalMemory(Memory):
 class LocalFilesystem(Filesystem):
     """Represents a local filesystem.
     """
-    def __init__(self,major,minor):
-        """Creates the filesystem from the major and minor
-        identifiers.
+    def __init__(self,device):
+        """Creates the filesystem from the device name.
         """
         Filesystem.__init__(self)
 

@@ -149,6 +149,25 @@ class MemoryView(ScaleView):
         self.set_max(self.memory.total_memory()/1000000)
         self.set_value(self.memory.active_memory()/1000000)
 
+class UptimeView(QLabel):
+    """A widget to display the current system uptime.
+    """
+    def __init__(self,uptime):
+        QLabel.__init__(self)
+        self.uptime=uptime
+        self.setAlignment(Qt.AlignRight)
+        uptime.system().callback().hook('uptime.updated',self.catch_update)
+        
+    def catch_update(self,data):
+        uptime=int(self.uptime.uptime())
+        days=uptime/(60*60*24)
+        hours=(uptime/(60*60))%24
+        mins=((uptime/60)%60)
+        secs=uptime%60
+        self.setText("%d days, %02d:%02d:%02d" % (days,hours,mins,secs)) 
+
+    def sizeHint(self):
+        return QSize(120,20)
 
 class SystemView(QGroupBox):
     """Displays current information for the most general (and
@@ -164,6 +183,8 @@ class SystemView(QGroupBox):
         layout.addWidget(ProcessorView(system.processors()))
         layout.addSpacing(16)
         layout.addWidget(MemoryView(system.memory()))
+        layout.addSpacing(16)
+        layout.addWidget(UptimeView(system.uptime()))
         
 class HistoryView(QFrame):
     """Displays most of OverviewView's content, as a history.

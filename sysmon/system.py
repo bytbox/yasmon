@@ -31,6 +31,7 @@ class System():
     
     def __init__(self,name="no-name"):
         self.lock=Lock()
+        self._uptime=Uptime.null()
         self._processors=[]
         self._memory=Memory.null()
         self._filesystems=[] #filesystems (to measure space usage)
@@ -122,8 +123,21 @@ class System():
         return (self._processors+
                 [self._memory]+
                 self._filesystems+
+                self._drives+
+                [self._uptime]+
                 self._netconns+
                 [self._processlist])
+
+    def set_uptime(self,uptime):
+        """Sets the system's uptime object.
+        """
+        uptime.set_system(self)
+        self._uptime=uptime
+
+    def uptime(self):
+        """Returns the system's uptime object.
+        """
+        return self._uptime
 
     def add_processor(self,processor):
         """Adds a processor to the system.
@@ -274,6 +288,14 @@ class SystemPart():
         return self._system
 
 
+class Uptime(SystemPart):
+    """Represents the uptime of a system.
+    """
+    def uptime(self):
+        """Returns the uptime in seconds.
+        """
+        return 0
+
 class Processor(SystemPart):
     """Represents a single abstract processor.
     """
@@ -369,7 +391,38 @@ class Memory(SystemPart):
 class Filesystem(SystemPart):
     """Represents a filesystem.
     """
-    pass
+    def size(self):
+        """Returns the size, in bytes, of the filesystem.
+        """
+        return 0
+    
+    def used(self):
+        """Returns the amount of used space, in bytes, of the
+        filesystem.
+        """
+        return 0
+
+    def available(self):
+        """Returns the available space, in bytes, of the filesystem.
+        """
+        return self.size()-self.used()
+
+    def device(self):
+        """Returns the device name (the relative path from /dev).
+        """
+        pass
+    
+    def mount_point(self):
+        """Returns the mount point of the drive, or None if not
+        mounted.
+        """
+        pass
+
+    def mounted(self):
+        """Returns True if the drive is mounted, or False otherwise.
+        """
+        return self.mount_point()==None
+    
 
 class Drive(SystemPart):
     """Represents a physical drive.

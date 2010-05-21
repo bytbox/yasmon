@@ -27,6 +27,12 @@ def get_null():
     """
     system=NullSystem()
 
+class NullUptime(System):
+    """Represents the uptime on a null system.
+    """
+    def __init__(self):
+        System.__init__(self)
+
 class NullSystem(System):
     """Represents a null system.
 
