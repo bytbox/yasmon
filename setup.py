@@ -34,4 +34,7 @@ setup(name='YASMon',
       packages=['sysmon'],
       scripts=['yasmon','yasmond'],
       data_files=[('/usr/share/man/man1',['yasmon.1','yasmond.1']),
-                  ('/usr/share/applications',['yasmon.desktop'])])
+                  ('/usr/share/applications',['yasmon.desktop']),
+                  ('/usr/share/icons/hicolor/scalable/apps',['gr/yasmon.svg']),
+                  ('/usr/share/app-install/icons',['gr/yasmon.png']),
+                  ('/usr/share/pixmaps',['gr/yasmon.png'])])
