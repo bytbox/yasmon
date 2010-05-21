@@ -53,6 +53,12 @@ class NullFilesystem(Filesystem):
     pass
 
 
+class NullDrive(Drive):
+    """Represents a null drive
+    """
+    pass
+
+
 class NullProcessList(ProcessList):
     """Represents a null list of processes
     """

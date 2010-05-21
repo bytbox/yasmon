@@ -209,6 +209,19 @@ class LocalFilesystem(Filesystem):
         self.callback().call("filesystem.updated",self)
 
 
+class LocalDrive(Drive):
+    """Represents a local drive.
+    """
+    def __init__(self,major,minor):
+        """Creates the drive from the major and minor
+        identifiers.
+        """
+        Drive.__init__(self)
+
+    def do_update(self):
+        self.callback().call("drive.updated",self)
+
+
 class LocalProcessList(ProcessList):
     """Represents a local list of processes.
 

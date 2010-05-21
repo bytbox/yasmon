@@ -33,7 +33,8 @@ class System():
         self.lock=Lock()
         self._processors=[]
         self._memory=Memory.null()
-        self._filesystems=[]
+        self._filesystems=[] #filesystems (to measure space usage)
+        self._drives=[] #drives (to measure i/o usage)
         self._netconns=[] #network connections
         self._processlist=ProcessList.null()
         self._delay=5 #the update interval in seconds
@@ -154,6 +155,17 @@ class System():
         """Returns the system's memory bank.
         """
         return self._memory
+
+    def add_drive(self,drive):
+        """adds a drive to the system
+        """
+        drive.set_system(self)
+        self._drives+=[drive]
+
+    def drives(self):
+        """Returns a list of all physical drives in the system.
+        """
+        return self._drives
 
     def add_filesystem(self,filesystem):
         """adds a filesystem to the system
@@ -356,6 +368,11 @@ class Memory(SystemPart):
 
 class Filesystem(SystemPart):
     """Represents a filesystem.
+    """
+    pass
+
+class Drive(SystemPart):
+    """Represents a physical drive.
     """
     pass
 
