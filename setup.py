@@ -29,7 +29,8 @@ class build(_build):
     """
     def run(self):
         _build.run(self)
-        print "Creating icons..."
+        #create the icons
+        print "creating icons..."
         subprocess.call(["/bin/sh","gr/gen-image.sh"])
 
 
