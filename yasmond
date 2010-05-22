@@ -56,7 +56,7 @@ s.listen(2)
 mutex=thread.allocate_lock()
 
 def handle_conn(conn,addr):
-    global outfile
+    global outfile,mutex
     #tell the admin
     print "Handling connection from %s" % addr
     #make a file for easy stuff
@@ -68,16 +68,35 @@ def handle_conn(conn,addr):
         print "Telling %s about %s" % (addr,x)
         with mutex:
             outfile=f
-            if x=='filesystem':
+            if x=='overview':
+                #list all parts
+                #(skip uptime)
+                #cpus
+                for cpu in system.processors():
+                    f.write("processor %s\n" % cpu.name())
+
+                #(skip memory)
+                #filesystems
+                for fs in system.filesystems():
+                    pass
+
+                #(skip processlist)
+                #(skip uptime)
+                #done; make sure everything got sent
+                f.write("*DONE\n")
+                f.flush()
+            elif x=='filesystem':
                 #filesystems
                 for fs in system.filesystems():
                     fs.update()
+                f.write("*DONE\n")
             elif x=='all':
                 #everything
                 system.update()
+                f.write("*DONE\n")
             else:
                 #assume everything but the filesystem
-                pass
+                f.write("*DONE\n")
     conn.close()
     print "%s left" % addr
 
