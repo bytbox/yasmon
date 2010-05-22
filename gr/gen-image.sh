@@ -17,10 +17,13 @@ OPTS="-background transparent"
 #for each resolution
 for x in 16 22 24 32 36 48 64 72 96 128 192 256
 do
-    echo -n "Generating ${x}x${x}... "
-    mkdir -p ${x}x${x}
-    convert $OPTS -resize ${x}x${x} yasmon.svg ${x}x${x}/yasmon.png
-    echo done!
+    if test ! -d ${x}x${x}
+    then
+	echo -n "Generating ${x}x${x}... "
+	mkdir ${x}x${x}
+	convert $OPTS -resize ${x}x${x} yasmon.svg ${x}x${x}/yasmon.png
+	echo done!
+    fi
 done
 
 #default is 64x64
