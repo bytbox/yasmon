@@ -23,10 +23,10 @@
 import re,socket,thread
 from system import *
 
-def get_remote(addr):
+def get_remote(addr,port=61874):
     """Returns an object representing a remote system.
     """
-    contact=RemoteContact(addr)
+    contact=RemoteContact(addr,port)
     system=RemoteSystem(contact)
     return system
 
@@ -37,7 +37,7 @@ class RemoteContact():
     remote machine. The necessary locking is handled automatically, so
     this class is thread-safe.
     """
-    def __init__(self,addr,port=61874):
+    def __init__(self,addr,port):
         """Connects to the remote machine.
         """
         #connect

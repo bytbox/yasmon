@@ -19,7 +19,7 @@
 #########################################################################
 
 from optparse import OptionParser
-import sysmon
+import re,sysmon
 
 #parse the options
 parser=OptionParser(usage="usage: %prog [-d DELAY] [-l | -c] [SERVER ...]",
@@ -89,7 +89,13 @@ elif mode=="remote":
         print "yasmon: error: no remote systems specified"
         exit(-1)
     for sysname in args:
-        systems[sysname]=sysmon.remote.get_remote(sysname)
+        match=re.match("^(.+):(.+)$",sysname)
+        if match:
+            port=int(match.group(2))
+            sysname=match.group(1)
+        else:
+            port=61874
+        systems[sysname]=sysmon.remote.get_remote(sysname,port)
 
 
 #start the UI
