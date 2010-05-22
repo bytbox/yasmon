@@ -20,8 +20,7 @@
 
 """
 
-import thread
-import socket
+import re,socket,thread
 from system import *
 
 def get_remote(addr):
@@ -52,7 +51,7 @@ class RemoteContact():
     def query(self,query):
         """Queries the remote machine.
 
-        This method automatically the necessary locking to be
+        This method automatically handles the necessary locking to be
         thread-safe. Do NOT acquire this object's lock before calling
         this method - the method will block and never return.
         """
@@ -61,12 +60,18 @@ class RemoteContact():
             f=self.socket().makefile()
             #send the query
             f.write("%s\n" % query)
+            f.flush()
+            info=""
             #read until final token
             for line in f:
+                #get rid of excess newline
+                line=re.sub("\n","",line)
                 if line=='*DONE':
+                    #it's over
                     break
-                print line
-            print "DONE"
+                #append the line
+                info+="%s\n" % line
+            return info
 
     def socket(self):
         """Returns the backing socket.
@@ -107,12 +112,28 @@ class RemoteSystem(System):
     def __init__(self,contact):
         """Creates an empty remote system.
         
-        This constructor does not initialize the remote system - that
-        is done with the get_remote method.
+        This constructor DOES initialize the remote system, using the
+        RemoteContact passed to it (generally by get_remote).
         """
+        #initialize stuff
         addr=contact.addr()
         System.__init__(self,addr)
         self._contact=contact
+        #get information from the contact
+        info=contact.query('overview')
+        lines=re.split("\n",info)
+        for line in lines:
+            #processor?
+            match=re.match("^processor ([a-z0-9]+)",line)
+            if match:
+                #create the processor and add it to the system
+                print match.group(1)
+            #filesystem?
+            match=re.match("^filesystem ([a-z0-9]+)",line)
+            if match:
+                #create the filesystem and add it to the system
+                print match.group(1)
+
 
     def contact(self):
         """Returns the backing RemoteContact object.

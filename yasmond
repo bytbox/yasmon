@@ -80,6 +80,8 @@ def handle_conn(conn,addr):
                 for fs in system.filesystems():
                     pass
 
+                #drives
+
                 #(skip processlist)
                 #(skip uptime)
                 #done; make sure everything got sent
