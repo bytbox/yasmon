@@ -15,4 +15,4 @@ do
 done
 
 #default is 64x64
-cp yasmon-64.png yasmon.png
+cp 64x64/yasmon.png yasmon.png

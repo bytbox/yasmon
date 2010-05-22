@@ -18,9 +18,20 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>. #
 #########################################################################
 
+from distutils.command.build import build as _build
 from distutils.core import setup
 
-import sysmon
+import subprocess,sysmon
+
+
+class build(_build):
+    """Specialized builder - also generates icons.
+    """
+    def run(self):
+        _build.run(self)
+        print "Creating icons..."
+        subprocess.call(["/bin/sh","gr/gen-image.sh"])
+
 
 #generate icon installation list (hicolor)
 iconlist=[]
@@ -29,7 +40,8 @@ for x in [16,22,24,32,36,48,64,72,96,128,192,256]:
     src="gr/%dx%d/yasmon.png" % (x,x)
     iconlist=iconlist+[(dest,[src])]
 
-setup(name='YASMon',
+setup(cmdclass={'build': build},
+      name='YASMon',
       version=sysmon.version(),
       description='Yet Another System Monitor',
       author='Scott Lawrence',

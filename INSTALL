@@ -1,3 +1,0 @@
-Installation bug: the python setup.py script does not generate the
-icons it uses, so before running that script, remember to run
-gr/gen-image.sh.
