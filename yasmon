@@ -19,9 +19,7 @@
 #########################################################################
 
 from optparse import OptionParser
-import shlex,sys,time
-
-import sysmon,sysmon.local,sysmon.remote,sysmon.callback
+import sysmon
 
 #parse the options
 parser=OptionParser(usage="usage: %prog [-d DELAY] [-l | -c] [SERVER ...]",
@@ -51,11 +49,15 @@ parser.add_option("-R","--local",action="store_true",
                   dest="local_mode",help="Use local mode (default)")
 (options,args)=parser.parse_args()
 
-
 mode="local"
 if options.remote_mode:
     mode="remote"
 
+
+#import what we need
+import shlex,sys,time
+
+import sysmon.callback
 
 #initialize the monitor
 #callback
@@ -71,6 +73,7 @@ callback.hook("misc.updated",
 
 systems={}
 if mode=="local":
+    import sysmon.local
     local=sysmon.local.get_local()
     local.set_delay(float(options.delay))
     local.set_callback(callback)
@@ -80,12 +83,13 @@ if mode=="local":
     systems['localhost']=local
 
 elif mode=="remote":
+    import sysmon.remote
     #note: do NOT assume localhost to be one of the systems!
     if len(args)==0:
         print "yasmon: error: no remote systems specified"
         exit(-1)
     for sysname in args:
-        print sysname
+        systems[sysname]=sysmon.remote.get_remote(sysname)
 
 
 #start the UI

@@ -20,7 +20,23 @@
 
 """
 
+from system import *
+
 def get_remote(ip):
     """Returns an object representing a remote system.
     """
-    pass
+    system=RemoteSystem(ip)
+    return system
+
+def RemoteSystem(System):
+    """Represents a remote system.
+    """
+    def __init__(self,ip="remote"):
+        """Creates an empty remote system.
+        
+        This constructor does not initialize the remote system - that
+        is done with the get_remote method.
+        """
+        System.__init__(self,ip)
+        print "test"
+

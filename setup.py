@@ -31,7 +31,7 @@ for x in [16,22,24,32,36,48,64,72,96,128,192,256]:
 
 setup(name='YASMon',
       version=sysmon.version(),
-      description='yet another system monitor',
+      description='Yet Another System Monitor',
       author='Scott Lawrence',
       author_email='bytbox@gmail.com',
       maintainer='Scott Lawrence',
@@ -46,4 +46,16 @@ setup(name='YASMon',
                   ('/usr/share/app-install/icons',['gr/yasmon.png']),
                   ('/usr/share/pixmaps',['gr/yasmon.png']),
                   ('/usr/share/icons/hicolor/scalable/apps',
-                   ['gr/yasmon.svg'])]+iconlist)
+                   ['gr/yasmon.svg'])]+iconlist,
+      classifiers=[
+        'Development Status :: 2 - Pre-Alpha',
+        'Environment :: X11 Applications :: Qt',
+        'Environment :: Console',
+        'Environment :: Console :: Curses',
+        'Intended Audience :: System Administrators',
+        'License :: OSI Approved :: GNU General Public License (GPL)',
+        'Operating System :: POSIX :: Linux',
+        'Programming Language :: Python',
+        'Topic :: System :: Monitoring',
+        'Topic :: System :: Systems Administration'
+        ])

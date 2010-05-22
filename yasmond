@@ -70,7 +70,8 @@ def handle_conn(conn,addr):
             outfile=f
             if x=='filesystem':
                 #filesystems
-                pass
+                for fs in system.filesystems():
+                    fs.update()
             elif x=='all':
                 #everything
                 system.update()
