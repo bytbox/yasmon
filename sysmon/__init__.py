@@ -9,4 +9,4 @@ the system and other connected systems running the sysmon server
 def version():
     """Returns, as a string, the current version of this package.
     """
-    return '0.0.1'
+    return '0.0.2'
