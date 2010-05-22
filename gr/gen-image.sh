@@ -1,11 +1,20 @@
 #!/bin/sh
 
+#check to make sure we have convert
+if test ! -x /usr/bin/convert
+then
+    echo "$0: error: convert not found (is imagemagick installed?)"
+    exit 1
+fi
+
 #get to the right directory
 dn=`dirname $0`
 cd $dn
 
+#options with which convert is called
 OPTS="-background transparent"
 
+#for each resolution
 for x in 16 22 24 32 36 48 64 72 96 128 192 256
 do
     echo -n "Generating ${x}x${x}... "
