@@ -213,7 +213,7 @@ class DetailedSystemView(QFrame):
 class MainView(QWidget):
     def __init__(self,systems):
         QWidget.__init__(self)
-        layout=QVBoxLayout()
+        layout=QGridLayout()
         self.setLayout(layout)
         tabWidget=QTabWidget()
         tabWidget.setTabPosition(QTabWidget.South)

@@ -119,6 +119,10 @@ class RemoteSystem(System):
         addr=contact.addr()
         System.__init__(self,addr)
         self._contact=contact
+        #assume certain things - we have uptime, memory, etc...
+        self.set_uptime(RemoteUptime(contact))
+        self.set_memory(RemoteMemory(contact))
+        self.set_processlist(RemoteProcessList(contact))
         #get information from the contact
         info=contact.query('overview')
         lines=re.split("\n",info)
@@ -140,3 +144,30 @@ class RemoteSystem(System):
         """
         return self._contact
 
+
+class RemoteUptime(Uptime):
+    """Represents the uptime of a remote system.
+    """
+    def __init__(self,contact):
+        """Creates a RemoteUptime instance based on the given
+        RemoteContact.
+        """
+        Uptime.__init__(self)
+
+class RemoteMemory(Memory):
+    """Represents the physical memory (RAM) of a remote system.
+    """
+    def __init__(self,contact):
+        """Creates a RemoteMemory instance based on the given
+        RemoteContact.
+        """
+        Memory.__init__(self)
+
+class RemoteProcessList(ProcessList):
+    """Represents the ProcessList of a remote system.
+    """
+    def __init__(self,contact):
+        """Creates a RemoteProcessList instance based on the given
+        RemoteContact.
+        """
+        ProcessList.__init__(self)
