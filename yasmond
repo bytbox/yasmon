@@ -103,8 +103,13 @@ def handle_conn(conn,addr):
                 #get the pickled dictionary
                 f.write("%s\n" % cPickle.dumps(system.memory().dict()))
             else:
-                #assume everything but the filesystem
-                pass
+                #processor?
+                match=re.match("^processor (.*)$",x)
+                if match:
+                    for cpu in system.processors():
+                        if cpu.name()==match.group(1):
+                            cpu.update()
+                            f.write("%s\n" % cPickle.dumps(cpu.dict()))
             f.write("*DONE\n")
             f.flush()
     conn.close()

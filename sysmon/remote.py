@@ -132,7 +132,7 @@ class RemoteSystem(System):
             match=re.match("^processor ([a-z0-9]+)",line)
             if match:
                 #create the processor and add it to the system
-                print match.group(1)
+                self.add_processor(RemoteProcessor(match.group(1),contact))
             #filesystem?
             match=re.match("^filesystem ([a-z0-9]+)",line)
             if match:
@@ -169,6 +169,31 @@ class RemoteUptime(Uptime):
         """Returns the backing RemoteContact object.
         """
         return self._contact
+
+
+class RemoteProcessor(Processor):
+    """Represents a processor on a remote system.
+    """
+    def __init__(self,name,contact):
+        """Creates a remote processor.
+        """
+        Processor.__init__(self)
+        self._name=name
+        self._dict=dict()
+        self._contact=contact
+
+    def name(self):
+        return self._name
+
+    def do_update(self):
+        info=self._contact.query("processor %s" % self.name())
+        #load as pickle'd from the string
+        self._dict=cPickle.loads(info)
+        self.callback().call("processor.%s.updated" % self.name(),self)        
+
+    def dict(self):
+        return self._dict
+
 
 class RemoteMemory(Memory):
     """Represents the physical memory (RAM) of a remote system.

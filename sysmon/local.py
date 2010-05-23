@@ -147,24 +147,6 @@ class LocalProcessor(Processor):
                     self._totalidle=idle
         self.callback().call("processor.%s.updated" % self.name(),self)
 
-    def modelname(self):
-        return self.dict()['model name']
-
-    def max_freq(self):
-        mf=self.freq() #if nothing else is found
-        #check the model name
-        mn=self.modelname()
-        match=re.search('([0-9.]+)GHz',mn)
-        if match:
-            mf=float(match.group(1))*1000
-        return float(mf)
-
-    def freq(self):
-        return self.dict()['cpu MHz']
-
-    def usage(self):
-        return float(self.dict()['usage'])
-
 
 class LocalMemory(Memory):
     """Represents a local memory (RAM) bank

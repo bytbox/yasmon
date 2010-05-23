@@ -21,7 +21,7 @@
 """
 
 from threading import Lock,Timer
-
+import re
 import callback
 
 class System():
@@ -308,22 +308,28 @@ class Processor(SystemPart):
     def modelname(self):
         """The modelname of this processor.
         """
-        return "Unknown"
+        return self.dict()['model name']
 
     def max_freq(self):
         """The maximum frequency of this processor, in MHz.
         """
-        return 0
+        mf=self.freq() #if nothing else is found
+        #check the model name
+        mn=self.modelname()
+        match=re.search('([0-9.]+)GHz',mn)
+        if match:
+            mf=float(match.group(1))*1000
+        return float(mf)
 
     def freq(self):
         """The current operating frequency of this processor, in MHz.
         """
-        return 0
+        return self.dict()['cpu MHz']
 
     def usage(self):
         """The current usage of this processor, as a fraction.
         """
-        return 0
+        return float(self.dict()['usage'])
 
     def dict(self):
         """Returns a dictionary with a massive amount of
