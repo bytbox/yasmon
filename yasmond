@@ -48,6 +48,11 @@ system.set_delay(-1)
 system.set_callback(callback)
 #we don't call run() - there's nothing to run! just wait
 
+#start updating the processors
+for cpu in system.processors():
+    cpu.set_delay(1)
+    cpu.update()
+
 #open the sockets
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(('',int(options.port)))
@@ -65,7 +70,6 @@ def handle_conn(conn,addr):
     for x in f:
         #make one line
         x=re.sub("[\n\r]","",x)
-        print "Telling %s about %s" % (addr,x)
         with mutex:
             outfile=f
             if x=='overview':
@@ -108,7 +112,6 @@ def handle_conn(conn,addr):
                 if match:
                     for cpu in system.processors():
                         if cpu.name()==match.group(1):
-                            cpu.update()
                             f.write("%s\n" % cPickle.dumps(cpu.dict()))
             f.write("*DONE\n")
             f.flush()

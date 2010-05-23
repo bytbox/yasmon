@@ -15,12 +15,10 @@ important to be sure that the information YASMon provides is not
 sensitive. If the information is sensitive but YASMon must still be
 used, it may be wise to hide YASMon with a firewall.
 
-\fByasmond\fR uses the same configuration file as \fByasmon\fR
-(consider it a \fByasmon\fR viewable over the network).  Since this
-configuration file specifies whether local or remote mode is to be
-used, in theory, one could have a \fByasmond\fR instances draw on
-remote instances for information; however, this is not recommended, so
-\fByasmond\fR always uses local mode, ignoring the configuration.
+The update intervals of certain \fByasmond\fR parts are limited for
+practical reasons (smaller update intervals result in less accurate
+statistics). In these instances, \fByasmond\fR performs the update at
+the maximum frequency regardless of input from \fByasmon\fR instances.
 .SH OPTIONS
 .TP
 \fB\-\-version\fR

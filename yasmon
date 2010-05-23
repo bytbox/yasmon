@@ -111,7 +111,12 @@ elif mode=="remote":
         else:
             port=61874
         try:
-            systems[sysname]=sysmon.remote.get_remote(sysname,port)
+            system=sysmon.remote.get_remote(sysname,port)
+            #set delays
+            system.set_delay(float(options.delay))
+            for fs in system.filesystems():
+                fs.set_delay(float(options.fs_delay))
+            systems[sysname]=system
         except IOError as err:
             #could not connect! 
             yasmon_error(err)

@@ -140,7 +140,10 @@ class LocalProcessor(Processor):
                     #update our current statistics
                     newusage=usage-self._totalusage
                     newidle=idle-self._totalidle
-                    pu=newusage/float(newusage+newidle)
+                    if (newusage+newidle)>0:
+                        pu=newusage/float(newusage+newidle)
+                    else:
+                        pu=0
                     #will this cause a problem with variable frequency cpus?
                     self.dict()['usage']=pu*self.max_freq()
                     self._totalusage=usage
