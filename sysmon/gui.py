@@ -209,7 +209,7 @@ class UptimeView(QLabel):
     def __init__(self,uptime):
         QLabel.__init__(self)
         self.uptime=uptime
-        self.setAlignment(Qt.AlignRight)
+        self.setAlignment(Qt.AlignCenter)
         uptime.system().callback().hook('uptime.updated',self.catch_update)
         
     def catch_update(self,data):
@@ -218,7 +218,7 @@ class UptimeView(QLabel):
         hours=(uptime/(60*60))%24
         mins=((uptime/60)%60)
         secs=uptime%60
-        self.setText("%d days, %02d:%02d:%02d" % (days,hours,mins,secs)) 
+        self.setText("Up %d days, %02d:%02d:%02d" % (days,hours,mins,secs)) 
 
     def sizeHint(self):
         return QSize(120,20)
@@ -232,13 +232,15 @@ class SystemView(QGroupBox):
     """
     def __init__(self,system):
         QFrame.__init__(self,system.name())
+        overlayout=QVBoxLayout()
         layout=QHBoxLayout()
-        self.setLayout(layout)
+        self.setLayout(overlayout)
+        overlayout.addWidget(UptimeView(system.uptime()))
+        overlayout.addSpacing(10)
+        overlayout.addLayout(layout)
         layout.addWidget(ProcessorView(system.processors()))
         layout.addSpacing(16)
         layout.addWidget(MemoryView(system.memory()))
-        layout.addSpacing(16)
-        layout.addWidget(UptimeView(system.uptime()))
         
 class HistoryView(QFrame):
     """Displays most of OverviewView's content, as a history.
