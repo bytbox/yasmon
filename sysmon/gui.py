@@ -206,8 +206,8 @@ class MemoryView(ScaleView):
         memory.system().callback().hook('memory.updated',self.catch_update)
 
     def catch_update(self,data):
-        self.set_max(self.memory.total_memory()/1000000)
-        self.set_value(self.memory.active_memory()/1000000)
+        self.set_max(self.memory.total_memory()/1000000.)
+        self.set_value(self.memory.active_memory()/1000000.)
 
 class UptimeView(QLabel):
     """A widget to display the current system uptime.
@@ -220,9 +220,9 @@ class UptimeView(QLabel):
         
     def catch_update(self,data):
         uptime=int(self.uptime.uptime())
-        days=uptime/(60*60*24)
-        hours=(uptime/(60*60))%24
-        mins=((uptime/60)%60)
+        days=uptime/(60*60*24.)
+        hours=int(uptime/(60*60.))%24
+        mins=(int(uptime/60.)%60)
         secs=uptime%60
         self.setText("Up %d days, %02d:%02d:%02d" % (days,hours,mins,secs)) 
 
