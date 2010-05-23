@@ -342,7 +342,7 @@ class Memory(SystemPart):
     def total_memory(self):
         """Returns the total amount of memory, in bytes.
         """
-        return 0
+        return self.dict()['MemTotal']
 
     def free_memory(self):
         """Returns the amount of completely free memory, in bytes.
@@ -351,17 +351,17 @@ class Memory(SystemPart):
         free_memory doesn't count caching and other such "essentially
         free" types of memory.
         """
-        return 0
+        return self.dict()['MemFree']
 
     def active_memory(self):
         """Returns the number of bytes of active memory.
         """
-        return 0
+        return self.dict()['Active']
 
     def inactive_memory(self):
         """Returns the amount of inactive memory, in bytes.
         """
-        return 0
+        return self.dict()['Inactive']
 
     def unused_memory(self):
         """Returns the amount of unused memory, in bytes.
@@ -371,12 +371,12 @@ class Memory(SystemPart):
     def total_swap(self):
         """Returns the total amount of swap, in bytes.
         """
-        return 0
+        return self.dict()['SwapTotal']
 
     def free_swap(self):
         """Returns the amount of free swap, in bytes.
         """
-        return 0
+        return self.dict()['SwapFree']
 
     def dict(self):
         """Returns a dictionary with a massive amount of

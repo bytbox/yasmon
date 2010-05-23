@@ -197,24 +197,6 @@ class LocalMemory(Memory):
     def dict(self):
         return self._dict
 
-    def total_memory(self):
-        return self.dict()['MemTotal'];
-
-    def free_memory(self):
-        return self.dict()['MemFree'];
-
-    def active_memory(self):
-        return self.dict()['Active'];
-
-    def inactive_memory(self):
-        return self.dict()['Inactive'];
-
-    def total_swap(self):
-        return self.dict()['SwapTotal'];
-
-    def free_swap(self):
-        return self.dict()['SwapFree'];
-
 
 class LocalFilesystem(Filesystem):
     """Represents a local filesystem.

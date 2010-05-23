@@ -20,7 +20,7 @@
 
 from optparse import OptionParser
 
-import re,socket,sys,thread
+import cPickle,re,socket,sys,thread
 
 import sysmon,sysmon.local,sysmon.callback
 
@@ -97,6 +97,11 @@ def handle_conn(conn,addr):
                 system.uptime().update()
                 #that doesn't have a callback - just give the answer
                 f.write("%d\n" % system.uptime().uptime())
+            elif x=='memory':
+                #memory
+                system.memory().update()
+                #get the pickled dictionary
+                f.write("%s\n" % cPickle.dumps(system.memory().dict()))
             else:
                 #assume everything but the filesystem
                 pass

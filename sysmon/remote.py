@@ -20,7 +20,7 @@
 
 """
 
-import re,socket,thread
+import cPickle,re,socket,thread
 from system import *
 
 def get_remote(addr,port=61874):
@@ -178,6 +178,17 @@ class RemoteMemory(Memory):
         RemoteContact.
         """
         Memory.__init__(self)
+        self._dict=dict()
+        self._contact=contact
+        
+    def do_update(self):
+        info=self._contact.query('memory')
+        #load as pickle'd from the string
+        self._dict=cPickle.loads(info)
+        self.callback().call("memory.updated",self)
+
+    def dict(self):
+        return self._dict
 
     def contact(self):
         """Returns the backing RemoteContact object.
@@ -193,6 +204,7 @@ class RemoteProcessList(ProcessList):
         RemoteContact.
         """
         ProcessList.__init__(self)
+        self._contact=contact
 
     def contact(self):
         """Returns the backing RemoteContact object.
