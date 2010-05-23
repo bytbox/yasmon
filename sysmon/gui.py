@@ -71,6 +71,7 @@ class AboutYasmon(QDialog):
     def __init__(self,parent):
         super(AboutYasmon, self).__init__(parent)
         self.setWindowTitle("About YASMon")
+        overlayout=QVBoxLayout()
         layout=QHBoxLayout()
         layout.addWidget(yasmon_image())
         sublayout=QVBoxLayout()
@@ -84,7 +85,12 @@ class AboutYasmon(QDialog):
                                    +"or, at your <br />choice, any later "
                                    +"version.</p></html>"))
         layout.addLayout(sublayout)
-        self.setLayout(layout)
+        overlayout.addLayout(layout)
+        bb=QDialogButtonBox(QDialogButtonBox.Ok,Qt.Horizontal,self)
+        bb.setCenterButtons(True)
+        bb.accepted.connect(self.accept)
+        overlayout.addWidget(bb)
+        self.setLayout(overlayout)
 
 
 class ScaleView(QWidget):
