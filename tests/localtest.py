@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>. #
 #########################################################################
 
-"""YASMond test suite.
+"""Local YASMon test suite.
 """
 
 #to import modules with a strange path
@@ -25,3 +25,4 @@ sys.path=['..']+sys.path
 
 #import the needed modules
 import sysmon
+
