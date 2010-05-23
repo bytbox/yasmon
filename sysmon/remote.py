@@ -66,6 +66,7 @@ class RemoteContact():
             for line in f:
                 #get rid of excess newline
                 line=re.sub("\n","",line)
+                print line
                 if line=='*DONE':
                     #it's over
                     break
@@ -105,6 +106,7 @@ class RemoteContact():
         """Returns the remote port in use.
         """
         return self._port
+
 
 class RemoteSystem(System):
     """Represents a remote system.
@@ -153,6 +155,19 @@ class RemoteUptime(Uptime):
         RemoteContact.
         """
         Uptime.__init__(self)
+        self._contact=contact
+        self._uptime=0
+
+    def uptime(self):
+        return self._uptime
+
+    def do_update(self):
+        info=self._contact.query('uptime')
+        
+    def contact(self):
+        """Returns the backing RemoteContact object.
+        """
+        return self._contact
 
 class RemoteMemory(Memory):
     """Represents the physical memory (RAM) of a remote system.
@@ -163,6 +178,12 @@ class RemoteMemory(Memory):
         """
         Memory.__init__(self)
 
+    def contact(self):
+        """Returns the backing RemoteContact object.
+        """
+        return self._contact
+
+
 class RemoteProcessList(ProcessList):
     """Represents the ProcessList of a remote system.
     """
@@ -171,3 +192,9 @@ class RemoteProcessList(ProcessList):
         RemoteContact.
         """
         ProcessList.__init__(self)
+
+    def contact(self):
+        """Returns the backing RemoteContact object.
+        """
+        return self._contact
+

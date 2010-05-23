@@ -86,7 +86,6 @@ def handle_conn(conn,addr):
                 #(skip uptime)
                 #done; make sure everything got sent
                 f.write("*DONE\n")
-                f.flush()
             elif x=='filesystem':
                 #filesystems
                 for fs in system.filesystems():
@@ -99,6 +98,7 @@ def handle_conn(conn,addr):
             else:
                 #assume everything but the filesystem
                 f.write("*DONE\n")
+            f.flush()
     conn.close()
     print "%s left" % addr
 

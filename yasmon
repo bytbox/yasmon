@@ -56,8 +56,25 @@ if options.remote_mode:
 
 #import what we need
 import shlex,sys,time
-
 import sysmon.callback
+
+#import for the mode
+if mode=='local':
+    import sysmon.local
+else:
+    import sysmon.remote
+
+#import for the UI setting
+#also set appropriate error yandling
+if options.curses:
+    from sysmon import curses
+    yasmon_error=curses.yasmon_error
+elif not options.log:
+    from sysmon import gui
+    app = gui.QApplication(sys.argv)
+    yasmon_error=gui.yasmon_error
+else:
+    yasmon_error=(lambda x:sys.stdout.write(x))
 
 #initialize the monitor
 #callback
@@ -73,7 +90,6 @@ callback.hook("misc.updated",
 
 systems={}
 if mode=="local":
-    import sysmon.local
     local=sysmon.local.get_local()
     local.set_delay(float(options.delay))
     local.set_callback(callback)
@@ -83,7 +99,6 @@ if mode=="local":
     systems['localhost']=local
 
 elif mode=="remote":
-    import sysmon.remote
     #note: do NOT assume localhost to be one of the systems!
     if len(args)==0:
         print "yasmon: error: no remote systems specified"
@@ -95,12 +110,15 @@ elif mode=="remote":
             sysname=match.group(1)
         else:
             port=61874
-        systems[sysname]=sysmon.remote.get_remote(sysname,port)
-
+        try:
+            systems[sysname]=sysmon.remote.get_remote(sysname,port)
+        except IOError as err:
+            #could not connect! 
+            yasmon_error(err)
+            
 
 #start the UI
 if options.curses:
-    from sysmon import curses
     #FIXME implement a decent curses interface, as specified in the
     #man pages
     sys.stderr.write("Curses not supported\n")
@@ -136,10 +154,12 @@ elif options.log:
 
 
 else:
-    from sysmon import gui
-
     class MainWindow(gui.QMainWindow):
+        """The main YASMon window.
+        """
         def __init__(self):
+            """Creates the main window.
+            """
             gui.QMainWindow.__init__(self)
             self.createActions()
             self.createMenus()
@@ -148,6 +168,8 @@ else:
 
         #actions
         def about(self):
+            """Displays the about box.
+            """
             gui.about_yasmon(self)
 
         def createActions(self):
@@ -171,7 +193,6 @@ else:
         def createStatusBar(self):
             self.statusBar().showMessage("Ready")
             
-    app = gui.QApplication(sys.argv)
     win = MainWindow()
     win.setWindowTitle("YASMon")
     win.show()

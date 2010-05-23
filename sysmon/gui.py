@@ -25,7 +25,20 @@ using Qt4.
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-import sysmon
+import re,sys,sysmon,traceback
+
+def yasmon_error(error):
+    """Displays the appropriate error message.
+    """
+    #FIXME ibus issues and segfault
+    em=QErrorMessage()
+    return None
+    tb=traceback.format_exc()
+    tb=re.sub("  ","&nbsp;&nbsp;&nbsp;&nbsp;",tb)
+    em.showMessage(
+        "<html><p>%s</p><p><b>Backtrace:</b></p>%s</html>" 
+        % (error,re.sub("\n","<br />",tb)))
+    em.exec_()
 
 def about_yasmon(parent):
     """Displays an "About YASMon" dialog box.
@@ -213,7 +226,8 @@ class DetailedSystemView(QFrame):
 class MainView(QWidget):
     def __init__(self,systems):
         QWidget.__init__(self)
-        layout=QGridLayout()
+        layout=QVBoxLayout()
+        sublayout=QHBoxLayout()
         self.setLayout(layout)
         tabWidget=QTabWidget()
         tabWidget.setTabPosition(QTabWidget.South)
@@ -221,6 +235,7 @@ class MainView(QWidget):
             tabid=tabWidget.addTab(DetailedSystemView(systems[system]),QString(system))
             tabWidget.setTabToolTip(tabid,QString("View information for %s" % system))
             #FIXME - set icon
-            layout.addWidget(SystemView(systems[system]))
+            sublayout.addWidget(SystemView(systems[system]))
+        layout.addLayout(sublayout)
         layout.addWidget(tabWidget)
         
