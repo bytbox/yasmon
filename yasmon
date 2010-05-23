@@ -181,9 +181,11 @@ else:
             self.aboutAct=gui.QAction("&About YASMon",self,
                                   statusTip="Display YASMon's About box",
                                   triggered=self.about)
+            self.aboutAct.setIcon(gui.yasmon_icon())
             self.aboutQtAct=gui.QAction("About &Qt", self,
                                     statusTip="Show the Qt library's About box",
                                     triggered=gui.qApp.aboutQt)
+            self.aboutQtAct.setIcon(gui.qt_icon())
         
         def createMenus(self):
             self.helpMenu=self.menuBar().addMenu("&Help")

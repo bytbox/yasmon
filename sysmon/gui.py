@@ -24,11 +24,13 @@ using Qt4.
 #GUI Code for YASMon client (uses QT4)
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+from PyQt4 import QtSvg
 
 import re,sys,sysmon,traceback
 
 def yasmon_error(error):
-    """Displays the appropriate error message.
+    """Displays the appropriate error message, based on the given
+    error object.
     """
     #FIXME ibus issues and segfault
     em=QErrorMessage()
@@ -43,8 +45,47 @@ def yasmon_error(error):
 def about_yasmon(parent):
     """Displays an "About YASMon" dialog box.
     """
-    QMessageBox.about(parent, "About YASMon",
-                      "<b>YASMon v"+sysmon.version())
+    dialog=AboutYasmon(parent)
+    dialog.exec_()
+
+def yasmon_icon():
+    """Returns a scalable version of YASMon's icon.
+    """
+    return QIcon("/usr/share/icons/hicolor/scalable/apps/yasmon.svg")
+
+def yasmon_image():
+    """Returns an QSvgWidget with YASMon's logo
+    """
+    i=QtSvg.QSvgWidget("/usr/share/icons/hicolor/scalable/apps/yasmon.svg")
+    i.setMaximumSize(i.sizeHint())
+    i.setMinimumSize(i.sizeHint())
+    return i
+
+def qt_icon():
+    """Returns a scalable version of QT's logo.
+    """
+    return QIcon()
+
+class AboutYasmon(QDialog):
+    """YASMon's about dialog box.
+    """
+    def __init__(self,parent):
+        super(AboutYasmon, self).__init__(parent)
+        self.setWindowTitle("About YASMon")
+        layout=QHBoxLayout()
+        layout.addWidget(yasmon_image())
+        sublayout=QVBoxLayout()
+        sublayout.addWidget(QLabel("<html><b>"+
+                                   "Yet Another System Monitor</b></html>"))
+        sublayout.addWidget(QLabel("<html><p>Version %s</p>" % sysmon.version()
+                                   +"<p>&copy; 2010 Scott Lawrence "
+                                   +"&lt;<a href='mailto:bytbox@gmail.com'>"
+                                   +"bytbox@gmail.com</a>&gt;</p>"
+                                   +"<p>Licensed under the GNU GPL version 3 "
+                                   +"or, at your <br />choice, any later "
+                                   +"version.</p></html>"))
+        layout.addLayout(sublayout)
+        self.setLayout(layout)
 
 
 class ScaleView(QWidget):
