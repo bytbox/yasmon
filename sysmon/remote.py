@@ -66,7 +66,6 @@ class RemoteContact():
             for line in f:
                 #get rid of excess newline
                 line=re.sub("\n","",line)
-                print line
                 if line=='*DONE':
                     #it's over
                     break

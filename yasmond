@@ -95,7 +95,6 @@ def handle_conn(conn,addr):
             elif x=='uptime':
                 #uptime
                 system.uptime().update()
-                print system.uptime().uptime()
                 #that doesn't have a callback - just give the answer
                 f.write("%d\n" % system.uptime().uptime())
             else:
