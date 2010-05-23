@@ -60,6 +60,8 @@ class ScaleView(QWidget):
         self._value=default
         self.unit=unit
         self.setToolTip("%d/%d %s" % (int(self.value()),int(max),unit))
+        self.setMaximumSize(QSize(70,100))
+        self.setMinimumSize(QSize(70,100))
         
     def value(self):
         """Returns the current value.
@@ -103,8 +105,7 @@ class ScaleView(QWidget):
 
     def sizeHint(self):
         return QSize(70,100)
-    def minimumSize(self):
-        return self.sizeHint()
+
 
 
 class CPUView(ScaleView):
