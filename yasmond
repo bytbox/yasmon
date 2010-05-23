@@ -85,19 +85,23 @@ def handle_conn(conn,addr):
                 #(skip processlist)
                 #(skip uptime)
                 #done; make sure everything got sent
-                f.write("*DONE\n")
             elif x=='filesystem':
                 #filesystems
                 for fs in system.filesystems():
                     fs.update()
-                f.write("*DONE\n")
             elif x=='all':
                 #everything
                 system.update()
-                f.write("*DONE\n")
+            elif x=='uptime':
+                #uptime
+                system.uptime().update()
+                print system.uptime().uptime()
+                #that doesn't have a callback - just give the answer
+                f.write("%d\n" % system.uptime().uptime())
             else:
                 #assume everything but the filesystem
-                f.write("*DONE\n")
+                pass
+            f.write("*DONE\n")
             f.flush()
     conn.close()
     print "%s left" % addr

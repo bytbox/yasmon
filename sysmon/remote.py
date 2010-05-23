@@ -163,6 +163,8 @@ class RemoteUptime(Uptime):
 
     def do_update(self):
         info=self._contact.query('uptime')
+        self._uptime=int(info)
+        self.callback().call("uptime.updated",self)
         
     def contact(self):
         """Returns the backing RemoteContact object.

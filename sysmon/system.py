@@ -240,18 +240,19 @@ class SystemPart():
         #make sure we have a valid delay
         if not self.delay():
             self.set_delay(self.system().delay())
-        #don't do anything if we're weird
-        if self.delay()==-1:
-            return
+            
 
         #acquire the lock
         self.system().acquire()
         #do the wuhk
         self.do_update()
-        #reset the timer
-        self.timer=Timer(self.delay(),self.update)
-        self.timer.daemon=True
-        self.timer.start()
+
+        #don't set the timer if we're weird
+        if not self.delay()==-1:
+            #reset the timer
+            self.timer=Timer(self.delay(),self.update)
+            self.timer.daemon=True
+            self.timer.start()
         #release the lock
         self.system().release()
 
