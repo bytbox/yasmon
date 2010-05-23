@@ -34,7 +34,6 @@ def yasmon_error(error):
     """
     #FIXME ibus issues and segfault
     em=QErrorMessage()
-    return None
     tb=traceback.format_exc()
     tb=re.sub("  ","&nbsp;&nbsp;&nbsp;&nbsp;",tb)
     em.showMessage(
