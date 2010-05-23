@@ -19,9 +19,17 @@
 """YASMond test suite.
 """
 
+#unit tests
+import unittest
+
 #to import modules with a strange path
 import sys
 sys.path=['..']+sys.path
 
-#import the needed modules
-import sysmon
+#import the needed YASMon modules
+from sysmon import version
+
+def suite():
+    """Returns the relevant test suite.
+    """
+    return unittest.TestSuite([])

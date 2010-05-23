@@ -18,3 +18,6 @@
 
 """Master YASMon tester.
 """
+
+#unit tests
+import unittest
