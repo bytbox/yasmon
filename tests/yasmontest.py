@@ -20,4 +20,16 @@
 """
 
 #unit tests
-import unittest
+from unittest import *
+
+#available unit tests
+import localtest,remotetest,daemontest
+
+
+if __name__=='__main__':
+    #run the tests!
+    runner=TextTestRunner(verbosity=2)
+    #for each suite
+    suites=[localtest.suite(),remotetest.suite(),daemontest.suite()]
+    for suite in suites:
+        runner.run(suite)
