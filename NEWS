@@ -2,13 +2,40 @@ YASMon NEWS File
 
 See README for more information about YASMon.
 
-Version 0.0.4 (May 24, 2010)
 ============================
+
+Version 0.0.4 (May 24, 2010)
+
  * Added unit testing
+ * Improved error handling
  * Increased python 3 compatibility
    * Removed integer division
  * Fixed race condition on GUI exit
 
+
+============================
+
+Version 0.0.3 (May 23, 2010)
+
+ * Fixed various UI display bugs in Qt4 interface
+ * Remote memory and processor usage monitoring
+
+
+============================
+
+Version 0.0.2 (May 22, 2010)
+
+ * Added YASMond startup script
+ * Remote uptime viewing
+ * Improved error handling
+
+
+============================
+
+Version 0.0.1 (May 21, 2010)
+
+ * Initial version
+ * Local CPU, RAM, and uptime monitoring
 
 --------------------------------------------------------
 
