@@ -207,6 +207,11 @@ else:
     for system in systems:
         systems[system].run()
 
-    sys.exit(app.exec_())
+    ret=app.exec_()
+    #stop all the daemons
+    for system in systems:
+        systems[system].acquire()
+        
+    sys.exit(ret)
 
 
