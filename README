@@ -18,6 +18,9 @@ Features
   * RAM usage
   * Uptime
 
+* Library for use by other programs.
+* Qt4-based GUI
+
 Security
 ========
 Please note that all remote monitoring happens over an unsecured
