@@ -13,6 +13,7 @@ Features
 * Local monitoring on a system without a YASMond process
 * Remote monitoring over an *unsecured* connection
 * Viewing (both remote and local) of:
+
   * CPU usage for multiple processors
   * RAM usage
   * Uptime
