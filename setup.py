@@ -21,7 +21,7 @@
 from distutils.command.build import build as _build
 from distutils.core import setup
 
-import subprocess,sysmon
+import codecs,os,subprocess,sysmon
 
 
 class build(_build):
@@ -41,10 +41,14 @@ for x in [16,22,24,32,36,48,64,72,96,128,192,256]:
     src="gr/%dx%d/yasmon.png" % (x,x)
     iconlist=iconlist+[(dest,[src])]
 
+def read(*rnames):
+    return codecs.open(os.path.join(*rnames), encoding='utf-8').read()
+
 setup(cmdclass={'build': build},
       name='YASMon',
       version=sysmon.version(),
       description='Yet Another System Monitor',
+      long_description=read('README'),
       author='Scott Lawrence',
       author_email='bytbox@gmail.com',
       maintainer='Scott Lawrence',
