@@ -25,6 +25,13 @@ from unittest import *
 #available unit tests
 import localtest,remotetest,daemontest
 
+class MyTestRunner(TestRunner):
+    """Custom TestRunner implemenation for YASMon.
+
+    This implementation uses curses to a limited extent for the
+    creation of progress bars and, where possible, colored output.
+    """
+    pass
 
 if __name__=='__main__':
     #run the tests!
