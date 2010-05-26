@@ -19,6 +19,7 @@
 #########################################################################
 
 from distutils.command.build import build as _build
+from distutils.cmd import Command
 from distutils.core import setup
 
 import codecs,os,subprocess,sysmon
@@ -33,6 +34,23 @@ class build(_build):
         print "creating icons..."
         subprocess.call(["/bin/sh","gr/gen-image.sh"])
 
+class test(Command):
+    """Custom YASMon-distutils command to run the test suite
+    """
+    user_options=[]
+    def __init__(self,dist):
+        Command.__init__(self,dist)
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        import sysmon.tests
+        sysmon.tests.run_tests()
+
 
 #generate icon installation list (hicolor)
 iconlist=[]
@@ -44,7 +62,7 @@ for x in [16,22,24,32,36,48,64,72,96,128,192,256]:
 def read(*rnames):
     return codecs.open(os.path.join(*rnames), encoding='utf-8').read()
 
-setup(cmdclass={'build': build},
+setup(cmdclass={'build': build, 'test': test},
       name='YASMon',
       version=sysmon.version(),
       description='Yet Another System Monitor',

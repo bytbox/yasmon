@@ -33,10 +33,3 @@ class MyTestRunner(TestRunner):
     """
     pass
 
-if __name__=='__main__':
-    #run the tests!
-    runner=TextTestRunner(verbosity=2)
-    #for each suite
-    suites=[localtest.suite(),remotetest.suite(),daemontest.suite()]
-    for suite in suites:
-        runner.run(suite)
