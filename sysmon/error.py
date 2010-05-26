@@ -47,6 +47,17 @@ class InsaneError(Error):
     def __init__(self,msg="Insane environment"):
         Error.__init__(self,msg)
 
+class InternalError(Error):
+    """Something went very wrong internally. Blame the programmer.
+    """
+    def __init__(self,msg="blame the programmer"):
+        Error.__init__(self,msg)
+
+class UnimplementedError(InternalError):
+    """Something wasn't implemented.
+    """
+    pass
+
 class RemoteError(Error):
     """An error occurred when talking to a remote machine.
     """

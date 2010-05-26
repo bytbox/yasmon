@@ -23,6 +23,7 @@
 from threading import Lock,Timer
 import re
 import callback
+from error import *
 
 class System():
     """Represents an abstract system and implements some basic logic.
@@ -222,6 +223,16 @@ class SystemPart():
         self._delay=None
         self._system=None
         self.timer=None
+        self._history=SystemPartHistory(self)
+
+    @staticmethod
+    def values():
+        """An abstract method returning a list of functions referring
+        to data contained in an object of this class.
+
+        This method must be implemented by every subclass that.
+        """
+        raise UnimplementedError("SystemParts must implement values()")
     
     @staticmethod
     def null():
@@ -286,17 +297,28 @@ class SystemPart():
         self._system=system
 
     def system(self):
+        """Returns the system with which this object is associated.
+        """
         return self._system
+
+    def history(self):
+        """Returns the history storing information about this part.
+        """
+        return self._history
 
 
 class SystemPartHistory():
     """Stores the history of a system part.
+
+    This class should not be extended. If you want to extend it, you
+    are almost certainly doing something very wrong.
     """
     def __init__(self,part):
         """Creates a blank history for the given part.
         """
         self._part=part
-
+        self.part_values=part.values()
+ 
     def update(self):
         """Update the part's history.
 
