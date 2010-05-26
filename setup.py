@@ -38,6 +38,7 @@ class test(Command):
     """Custom YASMon-distutils command to run the test suite
     """
     user_options=[]
+    description='run unit test suites'
     def __init__(self,dist):
         Command.__init__(self,dist)
 
