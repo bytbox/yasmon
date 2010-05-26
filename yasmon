@@ -57,6 +57,7 @@ if options.remote_mode:
 #import what we need
 import shlex,sys,time
 import sysmon.callback
+from sysmon.error import *
 
 #import for the mode
 if mode=='local':
@@ -68,13 +69,9 @@ else:
 #also set appropriate error yandling
 if options.curses:
     from sysmon import curses
-    yasmon_error=curses.yasmon_error
 elif not options.log:
     from sysmon import gui
     app = gui.QApplication(sys.argv)
-    yasmon_error=gui.yasmon_error
-else:
-    yasmon_error=(lambda x:sys.stdout.write(x))
 
 #initialize the monitor
 #callback
@@ -101,8 +98,7 @@ if mode=="local":
 elif mode=="remote":
     #note: do NOT assume localhost to be one of the systems!
     if len(args)==0:
-        print "yasmon: error: no remote systems specified"
-        exit(-1)
+        raise CLArgumentError("no remote systems specified")
     for sysname in args:
         match=re.match("^(.+):(.+)$",sysname)
         if match:
@@ -119,7 +115,7 @@ elif mode=="remote":
             systems[sysname]=system
         except IOError as err:
             #could not connect! 
-            yasmon_error(err)
+            raise RemoteError(sysname,"could not connect")
             
 
 #start the UI

@@ -18,3 +18,31 @@
 
 """YASMon error handling.
 """
+
+class Error(Exception):
+    """Base class for YASMon errors.
+    """
+    def __init__(self,msg="Unknown"):
+        Exception.__init__(self)
+        self.msg=msg
+    def __str__(self):
+        return self.msg
+
+class UserError(Error):
+    """Error indicating that the user did something wrong.
+    """
+    def __init__(self,msg="Unknown"):
+        Error.__init__(self,msg)
+
+class CLArgumentError(UserError):
+    """The command-line arguments were bad.
+    """
+    def __init__(self,msg="Unknown"):
+        UserError.__init__(self,msg)
+
+class RemoteError(Error):
+    """An error occurred when talking to a remote machine.
+    """
+    def __init__(self,remote,msg="Unknown"):
+        Error.__init__(self,"%s (remote = %s)" % (msg,remote))
+

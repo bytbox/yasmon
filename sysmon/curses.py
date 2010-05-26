@@ -23,6 +23,3 @@
 
 
 import sysmon
-
-def yasmon_error(error):
-    print error

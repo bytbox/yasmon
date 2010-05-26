@@ -28,19 +28,6 @@ from PyQt4 import QtSvg
 
 import re,sys,sysmon,traceback
 
-def yasmon_error(error):
-    """Displays the appropriate error message, based on the given
-    error object.
-    """
-    #FIXME ibus issues and segfault
-    em=QErrorMessage()
-    tb=traceback.format_exc()
-    tb=re.sub("  ","&nbsp;&nbsp;&nbsp;&nbsp;",tb)
-    em.showMessage(
-        "<html><p>%s</p><p><b>Backtrace:</b></p>%s</html>" 
-        % (error,re.sub("\n","<br />",tb)))
-    em.exec_()
-
 def about_yasmon(parent):
     """Displays an "About YASMon" dialog box.
     """
