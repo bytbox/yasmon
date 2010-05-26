@@ -225,15 +225,20 @@ class SystemPart():
         self.timer=None
         self._history=SystemPartHistory(self)
 
-    @staticmethod
-    def values():
+    def values(self):
         """An abstract method returning a list of functions referring
-        to data contained in an object of this class.
+        to (and returning) the data contained in an object of this
+        class.
 
-        This method must be implemented by every subclass that.
+        This method should not return all available data - it should
+        only return data that can reasonably be expected to
+        change. Most of the time, this data will be numeric or in some
+        way easily graphed.
+
+        This method must be implemented by every subclass.
         """
         raise UnimplementedError("SystemParts must implement values()")
-    
+ 
     @staticmethod
     def null():
         """Returns a null part to be used when no real part is
@@ -252,7 +257,6 @@ class SystemPart():
         if not self.delay():
             self.set_delay(self.system().delay())
             
-
         #acquire the lock
         self.system().acquire()
         #do the wuhk
@@ -343,9 +347,23 @@ class Uptime(SystemPart):
         """
         return 0
 
+    @staticmethod
+    def null():
+        return NullUptime()
+
+    def values(self):
+        return [self.uptime]
+
 class Processor(SystemPart):
     """Represents a single abstract processor.
     """
+    @staticmethod
+    def null():
+        return NullProcessor()
+
+    def values(self):
+        return [self.dict]
+
     def name(self):
         """An appropriate name for the processor, like cpu4.
         """
@@ -391,6 +409,13 @@ class Processor(SystemPart):
 class Memory(SystemPart):
     """Represents a memory (RAM) bank.
     """
+    @staticmethod
+    def null():
+        return NullMemory()
+
+    def values(self):
+        return [self.dict]
+
     def total_memory(self):
         """Returns the total amount of memory, in bytes.
         """
@@ -444,6 +469,13 @@ class Memory(SystemPart):
 class Filesystem(SystemPart):
     """Represents a filesystem.
     """
+    @staticmethod
+    def null():
+        return NullFilesystem()
+
+    def values(self):
+        return []
+
     def size(self):
         """Returns the size, in bytes, of the filesystem.
         """
@@ -480,27 +512,57 @@ class Filesystem(SystemPart):
 class Drive(SystemPart):
     """Represents a physical drive.
     """
-    pass
+    @staticmethod
+    def null():
+        return NullDrive()
+
+    def values(self):
+        return []
+
 
 class ProcessList(SystemPart):
     """Represents a list of processes.
     """
-    pass
+    @staticmethod
+    def null():
+        return NullProcessList()
+
+    def values(self):
+        return []
 
 
 class NetworkConnection(SystemPart):
     """Represents a single network connection
     """
-    pass
+    @staticmethod
+    def null():
+        return NullNetworkConnection()
+
+    def values(self):
+        return []
 
 
 class Process:
     """Represents a single process
     """
-    pass
+    @staticmethod
+    def null():
+        return NullProcess()
+
+    def values(self):
+        return []
 
 
 class Server:
     """Represents running server software (sshd, httpd, etc...)
     """
-    pass
+    @staticmethod
+    def null():
+        return NullServer()
+
+    def values(self):
+        return []
+
+
+from null import *
+

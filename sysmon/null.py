@@ -20,18 +20,12 @@
 
 """
 
-from system import *;
+from system import *
 
 def get_null():
     """Returns an object representing the null system.
     """
     system=NullSystem()
-
-class NullUptime(System):
-    """Represents the uptime on a null system.
-    """
-    def __init__(self):
-        System.__init__(self)
 
 class NullSystem(System):
     """Represents a null system.
@@ -39,6 +33,19 @@ class NullSystem(System):
     """
     def __init__(self):
         System.__init__(self)
+
+class NullSystemPart(SystemPart):
+    """Represents a null system part.
+    
+    """
+    pass
+
+
+class NullUptime(Uptime):
+    """Represents the uptime on a null system.
+    """
+    def __init__(self):
+        Uptime.__init__(self)
 
 
 class NullProcessor(Processor):
@@ -73,5 +80,18 @@ class NullProcessList(ProcessList):
 
 class NullProcess(Process):
     """Represents a single null process
+    """
+    pass
+
+class NullNetworkConnection(NetworkConnection):
+    """NetworkConnection placeholder
+    """
+    pass
+
+class NullServer(Server):
+    """Server placeholder
+
+    This is unrelated to the YASMon daemon, although it could
+    certainly be treated as a server.
     """
     pass

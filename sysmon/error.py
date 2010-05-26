@@ -26,6 +26,13 @@ class Error(Exception):
         Exception.__init__(self)
         self.msg=msg
     def __str__(self):
+        """Returns the string that should be used to display this
+        error.
+
+        Unless a subclass overrides this method, this string is always
+        taken from the msg instance variable (usually the last
+        argument passed to a constructor).
+        """
         return self.msg
 
 class UserError(Error):
