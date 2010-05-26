@@ -21,7 +21,7 @@ do
     then
 	echo -n "Generating ${x}x${x}... "
 	mkdir ${x}x${x}
-	convert $OPTS -resize ${x}x${x} yasmon.svg ${x}x${x}/yasmon.png
+	convert $OPTS -resize ${x}x${x} -fuzz 1 yasmon.svg ${x}x${x}/yasmon.png
 	echo done!
     fi
 done

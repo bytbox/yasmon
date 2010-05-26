@@ -40,6 +40,13 @@ class CLArgumentError(UserError):
     def __init__(self,msg="Unknown"):
         UserError.__init__(self,msg)
 
+class InsaneError(Error):
+    """Something about the environment is insane - this may make data
+    collection impossible.
+    """
+    def __init__(self,msg="Insane environment"):
+        Error.__init__(self,msg)
+
 class RemoteError(Error):
     """An error occurred when talking to a remote machine.
     """

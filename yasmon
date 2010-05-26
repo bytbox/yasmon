@@ -72,6 +72,8 @@ if options.curses:
 elif not options.log:
     from sysmon import gui
     app = gui.QApplication(sys.argv)
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
 
 #initialize the monitor
 #callback
@@ -174,6 +176,9 @@ else:
             gui.about_yasmon(self)
 
         def createActions(self):
+            self.whatsthis=QWhatsThis.createAction(self)
+            self.whatsthis.setWhatsThis("Displays inline context help")
+            self.whatsthis.setStatusTip("Display inline context help")
             self.aboutAct=gui.QAction("&About YASMon",self,
                                   statusTip="Display YASMon's About box",
                                   triggered=self.about)
@@ -186,6 +191,7 @@ else:
         def createMenus(self):
             self.helpMenu=self.menuBar().addMenu("&Help")
             #FIXME add manual
+            self.helpMenu.addAction(self.whatsthis)
             self.helpMenu.addSeparator()
             self.helpMenu.addAction(self.aboutAct)
             self.helpMenu.addAction(self.aboutQtAct)

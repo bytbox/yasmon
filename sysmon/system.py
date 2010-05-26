@@ -289,6 +289,30 @@ class SystemPart():
         return self._system
 
 
+class SystemPartHistory():
+    """Stores the history of a system part.
+    """
+    def __init__(self,part):
+        """Creates a blank history for the given part.
+        """
+        self._part=part
+
+    def update(self):
+        """Update the part's history.
+
+        This method needs to be called once for each update -
+        SystemPartHistory will not keep track of a delay. In normal
+        usage, the SystemPart will take care of this.
+        """
+        self.part().system().callback().call("misc.hist.updated")
+
+    def part(self):
+        """Returns the SystemPart for which this object stores
+        history.  
+        """
+        return self._part
+
+
 class Uptime(SystemPart):
     """Represents the uptime of a system.
     """
