@@ -2,9 +2,18 @@ YASMon NEWS File
 
 See README for more information about YASMon.
 
+
 ============================
 
-Version 0.0.4 (May 24, 2010)
+Version 0.0.5 (May 27, 2010)
+
+ * Added support for filesystem usage
+ * Added static meta-info view
+
+
+============================
+
+Version 0.0.4 (May 25, 2010)
 
  * Added unit testing
  * Improved error handling
