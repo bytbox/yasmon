@@ -83,12 +83,12 @@ class LocalSystem(System):
         #clear the dictionary
         self._meta={}
         meta=self._meta
-        meta['name']=self.name()
+        meta['name']=('System name',self.name())
         cmdline=""
         with open("/proc/cmdline") as clf:
             for line in clf:
-                cmdline="%s\n%s" % (cmdline,line)
-        meta['cmdline']=cmdline
+                cmdline="%s%s" % (cmdline,line)
+        meta['cmdline']=('Command line with which kernel was booted',cmdline)
 
 
 class LocalUptime(Uptime):

@@ -257,8 +257,30 @@ class MetaView(QTableWidget):
     about the system.
     """
     def __init__(self,system):
-        QTableWidget.__init__(self,2,2)
+        QTableWidget.__init__(self,0,2)
+        self.setColumnWidth(1,600)
         self.meta=system.meta()
+        self.setMouseTracking(True)
+        for key in self.meta:
+            desc=self.meta[key][0]
+            value=self.meta[key][1]
+            self.insertRow(self.rowCount())
+            self.setRowHeight(self.rowCount()-1,20)
+            ki=QTableWidgetItem(key)
+            ki.setToolTip(desc)
+            ki.setStatusTip(desc)
+            ki.setWhatsThis(desc)
+            ki.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+            vi=QTableWidgetItem(value)
+            vi.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+            vi.setToolTip(value)
+            vi.setStatusTip(value)
+            vi.setWhatsThis(desc)
+            self.setItem(self.rowCount()-1,0,ki)
+            self.setItem(self.rowCount()-1,1,vi)
+    def sizeHint(self):
+        return QSize(650,150)
+        
 
 class DetailedSystemView(QFrame):
     """Displays a detailed system view, consisting of a MetaView,
@@ -273,6 +295,11 @@ class DetailedSystemView(QFrame):
         self.setLayout(layout)
         
 class MainView(QWidget):
+    """The main view - contains everything else.
+
+    This is what the simplest graphical applications will want to use,
+    as it contains all of YASMon's functionality.
+    """
     def __init__(self,systems):
         QWidget.__init__(self)
         layout=QVBoxLayout()
@@ -283,8 +310,8 @@ class MainView(QWidget):
         for system in systems:
             tabid=tabWidget.addTab(DetailedSystemView(systems[system]),QString(system))
             tabWidget.setTabToolTip(tabid,QString("View information for %s" % system))
-            #FIXME - set icon
             sublayout.addWidget(SystemView(systems[system]))
+        sublayout.addStretch()
         layout.addLayout(sublayout)
         layout.addWidget(tabWidget)
         
