@@ -72,6 +72,9 @@ def handle_conn(conn,addr):
         x=re.sub("[\n\r]","",x)
         with mutex:
             outfile=f
+            if x=='meta':
+                #give metadata
+                f.write("%s\n" % cPickle.dumps(system.meta()))                
             if x=='overview':
                 #list all parts
                 #(skip uptime)

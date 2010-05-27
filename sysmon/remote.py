@@ -125,6 +125,10 @@ class RemoteSystem(System):
         self.set_memory(RemoteMemory(contact))
         self.set_processlist(RemoteProcessList(contact))
         #get information from the contact
+        #get metadata
+        info=contact.query('meta')
+        self._meta=cPickle.loads(info)
+        #get overview of parts
         info=contact.query('overview')
         lines=re.split("\n",info)
         for line in lines:
