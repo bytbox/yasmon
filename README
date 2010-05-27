@@ -17,6 +17,7 @@ Features
   * CPU usage for multiple processors
   * RAM usage
   * Uptime
+  * Distribution information
 
 * Library for use by other programs
 * Qt4-based GUI
