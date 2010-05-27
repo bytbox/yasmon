@@ -265,8 +265,9 @@ class MetaView(QTableWidget):
         for key in self.meta:
             desc=self.meta[key][0]
             value=self.meta[key][1]
-            self.insertRow(self.rowCount())
-            self.setRowHeight(self.rowCount()-1,20)
+            rc=self.rowCount()
+            self.insertRow(rc)
+            self.setRowHeight(rc,20)
             #key field
             ki=QTableWidgetItem(key)
             #show description stuff
@@ -284,10 +285,10 @@ class MetaView(QTableWidget):
             vi.setToolTip(value)
             vi.setStatusTip(value)
             vi.setWhatsThis(desc)
-            self.setItem(self.rowCount()-1,0,ki)
-            self.setItem(self.rowCount()-1,1,vi)
+            self.setItem(rc,0,ki)
+            self.setItem(rc,1,vi)
     def sizeHint(self):
-        return QSize(650,150)
+        return QSize(650,100)
         
 
 class DetailedSystemView(QFrame):

@@ -61,6 +61,13 @@ def get_local():
     system.create_meta()
     return system
 
+def read_file(filename):
+    content=""
+    with open(filename) as file:
+        for line in file:
+            content="%s%s" % (content,line)
+    return content
+
 class LocalSystem(System):
     """Represents a local system.
 
@@ -84,11 +91,12 @@ class LocalSystem(System):
         self._meta={}
         meta=self._meta
         meta['name']=('System name',self.name())
-        cmdline=""
-        with open("/proc/cmdline") as clf:
-            for line in clf:
-                cmdline="%s%s" % (cmdline,line)
-        meta['cmdline']=('Command line with which kernel was booted',cmdline)
+        meta['cmdline']=('Command line with which kernel was booted',
+                         read_file("/proc/cmdline"))
+        meta['version']=('The version of the kernel being run',
+                         read_file("/proc/version"))
+        meta['issue']=('The issue (or distribution) being run',
+                       re.sub("\\\\[nl]",'',read_file("/etc/issue")))
 
 
 class LocalUptime(Uptime):
