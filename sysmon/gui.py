@@ -260,19 +260,27 @@ class MetaView(QTableWidget):
         QTableWidget.__init__(self,0,2)
         self.setColumnWidth(1,600)
         self.meta=system.meta()
+        #enable satus bar stuff
         self.setMouseTracking(True)
         for key in self.meta:
             desc=self.meta[key][0]
             value=self.meta[key][1]
             self.insertRow(self.rowCount())
             self.setRowHeight(self.rowCount()-1,20)
+            #key field
             ki=QTableWidgetItem(key)
+            #show description stuff
             ki.setToolTip(desc)
             ki.setStatusTip(desc)
             ki.setWhatsThis(desc)
+            #flags
             ki.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+            
+            #value field
             vi=QTableWidgetItem(value)
+            #flags
             vi.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+            #expand on the value
             vi.setToolTip(value)
             vi.setStatusTip(value)
             vi.setWhatsThis(desc)
