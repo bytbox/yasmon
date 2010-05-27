@@ -252,12 +252,24 @@ class TopView(QFrame):
     def __init__(self,system):
         QFrame.__init__(self)
 
-class DetailedSystemView(QFrame):
-    """Displays a detailed system view, consisting of a HistoryView
-    and a TopView.
+class MetaView(QFrame):
+    """Displays interesting/semi-important static meta-information
+    about the system.
     """
     def __init__(self,system):
         QFrame.__init__(self)
+        self.meta=system.meta()
+
+class DetailedSystemView(QFrame):
+    """Displays a detailed system view, consisting of a MetaView,
+    a HistoryView, and a TopView.
+    """
+    def __init__(self,system):
+        QFrame.__init__(self)
+        layout=QVBoxLayout()
+        sublayout=QHBoxLayout()
+        layout.addWidget(MetaView(system))
+        layout.addLayout(sublayout)
         
 class MainView(QWidget):
     def __init__(self,systems):

@@ -56,6 +56,9 @@ def get_local():
     #create the process list
     system.set_processlist(LocalProcessList())
     system.set_uptime(uptime)
+
+    #create meta data
+    system.create_meta
     return system
 
 class LocalSystem(System):
@@ -69,6 +72,18 @@ class LocalSystem(System):
         is done with the get_local() method.
         """
         System.__init__(self,name)
+
+    def create_meta(self):
+        """Creates the meta information.
+
+        Ordinarily, this method is called only once, since the
+        meta-information should never change (except perhaps on
+        reboot).
+        """
+        #clear the dictionary
+        self._meta={}
+        meta=self._meta
+        meta['name']=self.name()
 
 
 class LocalUptime(Uptime):

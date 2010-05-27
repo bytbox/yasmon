@@ -42,7 +42,14 @@ class System():
         self._delay=5 #the update interval in seconds
         self._callback=callback.SysmonCallback()
         self._timers=[]
+        self._meta={}
         self._name=name
+
+    def meta(self):
+        """Returns a dictionary with static meta-information about the
+        system.
+        """
+        return self._meta
 
     def name(self):
         """Returns the identifying name of the system.
