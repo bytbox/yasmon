@@ -252,12 +252,12 @@ class TopView(QFrame):
     def __init__(self,system):
         QFrame.__init__(self)
 
-class MetaView(QFrame):
+class MetaView(QTableWidget):
     """Displays interesting/semi-important static meta-information
     about the system.
     """
     def __init__(self,system):
-        QFrame.__init__(self)
+        QTableWidget.__init__(self,2,2)
         self.meta=system.meta()
 
 class DetailedSystemView(QFrame):
@@ -270,6 +270,7 @@ class DetailedSystemView(QFrame):
         sublayout=QHBoxLayout()
         layout.addWidget(MetaView(system))
         layout.addLayout(sublayout)
+        self.setLayout(layout)
         
 class MainView(QWidget):
     def __init__(self,systems):

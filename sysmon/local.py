@@ -58,7 +58,7 @@ def get_local():
     system.set_uptime(uptime)
 
     #create meta data
-    system.create_meta
+    system.create_meta()
     return system
 
 class LocalSystem(System):
@@ -84,6 +84,11 @@ class LocalSystem(System):
         self._meta={}
         meta=self._meta
         meta['name']=self.name()
+        cmdline=""
+        with open("/proc/cmdline") as clf:
+            for line in clf:
+                cmdline="%s\n%s" % (cmdline,line)
+        meta['cmdline']=cmdline
 
 
 class LocalUptime(Uptime):
