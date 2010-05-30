@@ -3,6 +3,14 @@ YASMon NEWS File
 See README for more information about YASMon.
 
 
+===========================
+
+Version 0.1.0 (May 31, 2010)
+
+ * Added history view
+ * Added filesystem usage view
+
+
 ============================
 
 Version 0.0.5 (May 27, 2010)
