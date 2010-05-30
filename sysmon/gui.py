@@ -259,6 +259,8 @@ class MetaView(QTableWidget):
     def __init__(self,system):
         QTableWidget.__init__(self,0,2)
         self.setColumnWidth(1,600)
+        self.verticalHeader().setClickable(False)
+        self.horizontalHeader().setClickable(False)
         self.meta=system.meta()
         #enable satus bar stuff
         self.setMouseTracking(True)
