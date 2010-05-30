@@ -157,6 +157,12 @@ elif options.log:
 
 
 else:
+    def copy_tip(obj):
+        """Makes the given object's "What's this?" text be the same as
+        its status tip.
+        """
+        obj.setWhatsThis(obj.statusTip())
+
     class MainWindow(gui.QMainWindow):
         """The main YASMon window.
         """
@@ -175,20 +181,41 @@ else:
             """
             gui.about_yasmon(self)
 
+        def doFullScreen(self):
+            if self.isFullScreen():
+                self.showNormal()
+            else:
+                self.showFullScreen()
+
         def createActions(self):
+            #view menu
+            self.fullscreen=QAction("&Fullscreen",self,
+                                    statusTip="Make this window fullscreen",
+                                    triggered=self.doFullScreen)
+            self.fullscreen.setShortcut(Qt.CTRL+Qt.ALT+Qt.Key_Return)
+            copy_tip(self.fullscreen)
+
+            #help menu
             self.whatsthis=QWhatsThis.createAction(self)
-            self.whatsthis.setWhatsThis("Displays inline context help")
             self.whatsthis.setStatusTip("Display inline context help")
+            copy_tip(self.whatsthis)
             self.aboutAct=gui.QAction("&About YASMon",self,
                                   statusTip="Display YASMon's About box",
                                   triggered=self.about)
             self.aboutAct.setIcon(gui.yasmon_icon())
+            copy_tip(self.aboutAct)
             self.aboutQtAct=gui.QAction("About &Qt", self,
                                     statusTip="Show the Qt library's About box",
                                     triggered=gui.qApp.aboutQt)
             self.aboutQtAct.setIcon(gui.qt_icon())
+            copy_tip(self.aboutQtAct)
         
         def createMenus(self):
+            #View Menu
+            self.viewMenu=self.menuBar().addMenu("&View")
+            self.viewMenu.addAction(self.fullscreen)
+
+            #Help menu
             self.helpMenu=self.menuBar().addMenu("&Help")
             #FIXME add manual
             self.helpMenu.addAction(self.whatsthis)
