@@ -496,6 +496,10 @@ class Filesystem(SystemPart):
 
     def available(self):
         """Returns the available space, in bytes, of the filesystem.
+
+        This is represented in f_bfree, not f_bavail, so not all users may be
+        able to use more space even when the value returned by this function
+        is positive.
         """
         return self.size()-self.used()
 

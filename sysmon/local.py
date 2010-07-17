@@ -20,7 +20,9 @@
 
 """
 
+import os;
 import re;
+import sys;
 
 from system import *;
 
@@ -216,10 +218,48 @@ class LocalFilesystem(Filesystem):
     """
     def __init__(self,device):
         """Creates the filesystem from the device name.
+
+        If a nonsensical device are given, the object will act nonsensically,
+        possibly deleting various files. Take care.
         """
         Filesystem.__init__(self)
+        self.mount=None
+        self.device=re.sub('/dev/','',device)
+        with open('/proc/mounts') as mounts:
+            for line in mounts:
+                # the format is 6 space-seperated fields
+                match=re.search(
+                    "^([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+) ?$",line)
+                if match:
+                    dev=match.group(1)
+                    if dev == device:
+                        self.mount=match.group(2)
+
+    def mount_point(self):
+        return self.mount
+
+    def mounted(self):
+        return self.mount!=None
+
+    def device(self):
+        return self.device
+
+    def available(self):
+        return self.free
+
+    def used(self):
+        return self.size()-self.available()
+
+    def size(self):
+        return self.sz
 
     def do_update(self):
+        if self.mount==None:
+            return # don't bother calling any hooks
+        stat=os.statvfs(self.mount)
+        bsize=stat.f_bsize
+        self.free=bsize*stat.f_bfree
+        self.sz=bsize*stat.f_blocks
         self.callback().call("filesystem.updated",self)
 
 

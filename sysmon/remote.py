@@ -224,6 +224,10 @@ class RemoteMemory(Memory):
         """
         return self._contact
 
+class RemoteFilesystem(Filesystem):
+    """Represents the Filesystem of a remote system.
+    """
+    pass
 
 class RemoteProcessList(ProcessList):
     """Represents the ProcessList of a remote system.
