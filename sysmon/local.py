@@ -52,7 +52,7 @@ def get_local():
             minor=match.group(2)
             blocks=match.group(3)
             name=match.group(4)
-            system.add_filesystem(LocalFilesystem(name))
+            system.add_filesystem(LocalFilesystem("/dev/"+name))
     partitions.close()
 
     #create the process list
@@ -232,6 +232,7 @@ class LocalFilesystem(Filesystem):
                     "^([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+) ?$",line)
                 if match:
                     dev=match.group(1)
+                    print dev
                     if dev == device:
                         self.mount=match.group(2)
 
