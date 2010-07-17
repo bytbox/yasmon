@@ -224,7 +224,7 @@ class LocalFilesystem(Filesystem):
         """
         Filesystem.__init__(self)
         self.mount=None
-        self.device=re.sub('/dev/','',device)
+        self.dev=re.sub('/dev/','',device)
         with open('/proc/mounts') as mounts:
             for line in mounts:
                 # the format is 6 space-seperated fields
@@ -242,7 +242,7 @@ class LocalFilesystem(Filesystem):
         return self.mount!=None
 
     def device(self):
-        return self.device
+        return self.dev
 
     def available(self):
         return self.free

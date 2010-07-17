@@ -196,6 +196,32 @@ class MemoryView(ScaleView):
         self.set_max(self.memory.total_memory()/1000000.)
         self.set_value(self.memory.active_memory()/1000000.)
 
+class FilesystemView(ScaleView):
+    """A widget to display the current filesystem usage for a given
+    filesystem.
+    """
+    def __init__(self,fs):
+        ScaleView.__init__(self,fs.device(),0,1,'GB')
+        self.fs=fs
+        fs.system().callback().hook('filesystem.updated',self.catch_update)
+
+    def catch_update(self,data):
+        self.set_max(self.fs.size()/1000000000)
+        self.set_value(self.fs.used()/1000000000)
+
+class FilesysView(QWidget):
+    """A widget to view filesystem information for multiple filesystems.
+    """
+    def __init__(self,fslist):
+        QWidget.__init__(self)
+        layout=QHBoxLayout()
+        layout.setMargin(0)
+        self.setLayout(layout)
+        #for each filesystem...
+        for fs in fslist:
+            if fs.mounted():
+                layout.addWidget(FilesystemView(fs))
+
 class UptimeView(QLabel):
     """A widget to display the current system uptime.
     """
@@ -234,6 +260,8 @@ class SystemView(QGroupBox):
         layout.addWidget(ProcessorView(system.processors()))
         layout.addSpacing(16)
         layout.addWidget(MemoryView(system.memory()))
+        layout.addSpacing(16)
+        layout.addWidget(FilesysView(system.filesystems()))
         
 class HistoryView(QFrame):
     """Displays most of OverviewView's content, as a history.
