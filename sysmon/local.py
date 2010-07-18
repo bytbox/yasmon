@@ -20,11 +20,11 @@
 
 """
 
-import os;
-import re;
-import sys;
+import os,os.path
+import re
+import sys
 
-from system import *;
+from system import *
 
 def get_local():
     """Returns an object representing the local system.
@@ -225,6 +225,8 @@ class LocalFilesystem(Filesystem):
         Filesystem.__init__(self)
         self.mount=None
         self.dev=re.sub('/dev/','',device)
+        self.sz=0
+        self.free=0
         with open('/proc/mounts') as mounts:
             for line in mounts:
                 # the format is 6 space-seperated fields
@@ -232,8 +234,8 @@ class LocalFilesystem(Filesystem):
                     "^([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+) ?$",line)
                 if match:
                     dev=match.group(1)
-                    print dev
-                    if dev == device:
+                    print os.path.realpath(dev)
+                    if os.path.realpath(dev) == device:
                         self.mount=match.group(2)
 
     def mount_point(self):
