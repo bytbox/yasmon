@@ -234,15 +234,11 @@ class LocalFilesystem(Filesystem):
                     "^([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+) ?$",line)
                 if match:
                     dev=match.group(1)
-                    print os.path.realpath(dev)
                     if os.path.realpath(dev) == device:
                         self.mount=match.group(2)
 
     def mount_point(self):
         return self.mount
-
-    def mounted(self):
-        return self.mount!=None
 
     def device(self):
         return self.dev

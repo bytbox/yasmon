@@ -85,7 +85,7 @@ def handle_conn(conn,addr):
                 #(skip memory)
                 #filesystems
                 for fs in system.filesystems():
-                    pass
+                    f.write("filesystem %s\n" % fs.device())
 
                 #drives
 
@@ -93,7 +93,7 @@ def handle_conn(conn,addr):
                 #(skip uptime)
                 #done; make sure everything got sent
             elif x=='filesystem':
-                #filesystems
+                # update all filesystems
                 for fs in system.filesystems():
                     fs.update()
             elif x=='all':
@@ -116,6 +116,17 @@ def handle_conn(conn,addr):
                     for cpu in system.processors():
                         if cpu.name()==match.group(1):
                             f.write("%s\n" % cPickle.dumps(cpu.dict()))
+                #filesystem?
+                match=re.match("^filesystem (.*)$",x)
+                if match:
+                    for fs in system.filesystems():
+                        if fs.device()==match.group(1):
+                            fs.update()
+                            f.write("%s\n" %
+                                    cPickle.dumps(
+                                    (fs.size(),
+                                     fs.available(),
+                                     fs.mount_point())))
             f.write("*DONE\n")
             f.flush()
     conn.close()

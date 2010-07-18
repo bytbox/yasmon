@@ -229,12 +229,14 @@ else:
         def createStatusBar(self):
             self.statusBar().showMessage("Ready")
             
-    win = MainWindow()
-    win.setWindowTitle("YASMon")
-    win.show()
     #run sysmon
     for system in systems:
         systems[system].run()
+
+    #create the display
+    win = MainWindow()
+    win.setWindowTitle("YASMon")
+    win.show()
 
     ret=app.exec_()
     #stop all the daemons

@@ -141,7 +141,7 @@ class RemoteSystem(System):
             match=re.match("^filesystem ([a-z0-9]+)",line)
             if match:
                 #create the filesystem and add it to the system
-                print match.group(1)
+                self.add_filesystem(RemoteFilesystem(match.group(1),contact))
 
 
     def contact(self):
@@ -227,7 +227,44 @@ class RemoteMemory(Memory):
 class RemoteFilesystem(Filesystem):
     """Represents the Filesystem of a remote system.
     """
-    pass
+    def __init__(self,name,contact):
+        """Creates a RemoteFilesystem instance based on the given
+        RemoteContact.
+        """
+        Filesystem.__init__(self)
+        self._contact=contact
+        self._name=name
+        self.mount=None
+        self.sz=0
+        self.free=0
+
+    def do_update(self):
+        info=self._contact.query('filesystem '+self._name)
+        #load as pickle'd from the string
+        info=cPickle.loads(info)
+        (self.sz,self.free,self.mount)=info
+        self.callback().call("filesystem.updated",self)
+
+    def mount_point(self):
+        return self.mount
+
+    def device(self):
+        return self._name
+
+    def available(self):
+        return self.free
+
+    def used(self):
+        return self.size()-self.available()
+
+    def size(self):
+        return self.sz
+
+    def contact(self):
+        """Returns the backing RemoteContact object.
+        """
+        return self._contact
+    
 
 class RemoteProcessList(ProcessList):
     """Represents the ProcessList of a remote system.

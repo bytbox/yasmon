@@ -517,7 +517,7 @@ class Filesystem(SystemPart):
     def mounted(self):
         """Returns True if the drive is mounted, or False otherwise.
         """
-        return self.mount_point()==None
+        return self.mount_point()!=None
     
 
 class Drive(SystemPart):
