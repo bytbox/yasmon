@@ -16,6 +16,7 @@ Features
 
   * CPU usage for multiple processors
   * RAM usage
+  * Filesystem usage
   * Uptime
   * Distribution information
 
