@@ -25,7 +25,7 @@ from unittest import *
 #available unit tests
 import localtest,remotetest,daemontest
 
-class MyTestRunner(TestRunner):
+class MyTestRunner():
     """Custom TestRunner implemenation for YASMon.
 
     This implementation uses curses to a limited extent for the

@@ -25,7 +25,6 @@ from unittest import *
 #available unit tests
 import localtest,remotetest,daemontest,testrunner
 
-
 def run_tests():
     """Simple interface to run all tests.
     """
