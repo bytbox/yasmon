@@ -160,6 +160,7 @@ class CPUView(ScaleView):
         #add me to the hook
         processor.system().callback().hook("processor.%s.updated" % processor.name()
                                            ,self.catch_update)
+        self.catch_update(processor)
 
     def catch_update(self,processor):
         self.set_max(self.processor.max_freq())
@@ -191,6 +192,7 @@ class MemoryView(ScaleView):
         ScaleView.__init__(self,"ram",0,1,'MB')
         self.memory=memory
         memory.system().callback().hook('memory.updated',self.catch_update)
+        self.catch_update(None)
 
     def catch_update(self,data):
         self.set_max(self.memory.total_memory()/1000000.)
@@ -204,6 +206,7 @@ class FilesystemView(ScaleView):
         ScaleView.__init__(self,fs.device(),0,1,'GB')
         self.fs=fs
         fs.system().callback().hook('filesystem.updated',self.catch_update)
+        self.catch_update(None)
 
     def catch_update(self,data):
         self.set_max(self.fs.size()/1000000000)
@@ -230,6 +233,7 @@ class UptimeView(QLabel):
         self.uptime=uptime
         self.setAlignment(Qt.AlignCenter)
         uptime.system().callback().hook('uptime.updated',self.catch_update)
+        self.catch_update(None)
         
     def catch_update(self,data):
         uptime=int(self.uptime.uptime())
