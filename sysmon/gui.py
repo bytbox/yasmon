@@ -140,7 +140,6 @@ class ScaleView(QWidget):
         return QSize(70,100)
 
 
-
 class CPUView(ScaleView):
     """A widget to view cpu usage information et al. for a single
     CPU.
@@ -268,10 +267,31 @@ class SystemView(QGroupBox):
         layout.addWidget(FilesysView(system.filesystems()))
 
 class ComponentHistoryView(QWidget):
-    """Displays the history of a set of similar components.
+    """Displays the history of a set of similar components on a single graph.
     """
     def __init__(self,component_list):
         QWidget.__init__(self)
+        self.clist=component_list # the list of components for which history
+                                  # will be displayed
+        self.setToolTip("History") #FIXME TODO a better tooltip
+        #set the size
+        self.setMaximumSize(QSize(60000,150)) # FIXME there must be a
+                                                     # better way to do this
+        self.setMinimumSize(QSize(100,80))
+
+    def paintEvent(self,event):
+        
+        #settings
+        painter=QPainter(self)
+        painter.setPen(QPen()) # defaults
+        painter.setBrush(QBrush()) # defaults
+        
+        #get the dimensions
+        h=self.height()
+        w=self.width()
+
+        #white background
+        painter.fillRect(QRect(0,0,w,h),QColor.fromRgb(255,255,255))
         
 class HistoryView(QFrame):
     """Displays most of OverviewView's content, as a history.
