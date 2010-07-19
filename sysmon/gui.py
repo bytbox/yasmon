@@ -327,13 +327,15 @@ class MetaView(QTableWidget):
 
 class DetailedSystemView(QFrame):
     """Displays a detailed system view, consisting of a MetaView,
-    a HistoryView, and a TopView.
+    a HistoryView, and a TopView, for the given system.
     """
     def __init__(self,system):
         QFrame.__init__(self)
         layout=QVBoxLayout()
         sublayout=QHBoxLayout()
         layout.addWidget(MetaView(system))
+        sublayout.addWidget(HistoryView(system))
+        sublayout.addWidget(TopView(system))
         layout.addLayout(sublayout)
         self.setLayout(layout)
         
