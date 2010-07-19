@@ -254,7 +254,7 @@ class SystemView(QGroupBox):
     usage.
     """
     def __init__(self,system):
-        QFrame.__init__(self,system.name())
+        QGroupBox.__init__(self,system.name())
         overlayout=QVBoxLayout()
         layout=QHBoxLayout()
         self.setLayout(overlayout)
@@ -266,17 +266,33 @@ class SystemView(QGroupBox):
         layout.addWidget(MemoryView(system.memory()))
         layout.addSpacing(16)
         layout.addWidget(FilesysView(system.filesystems()))
+
+class ComponentHistoryView(QWidget):
+    """Displays the history of a set of similar components.
+    """
+    def __init__(self,component_list):
+        QWidget.__init__(self)
         
 class HistoryView(QFrame):
     """Displays most of OverviewView's content, as a history.
     
-    This view consists of a set of a few graphs, each containing in
-    somewhat condensed for the history of some measure of
-    performance. In general, single pixel is used for every related
-    update fired.
+    This view consists of a set of a few graphs, vertically arranged, each
+    containing in somewhat condensed form the history of some measure of
+    performance. In general, a single pixel (horizontally) is used for every
+    related update fired.
     """
     def __init__(self,system):
         QFrame.__init__(self)
+        layout=QVBoxLayout()
+        self.setLayout(layout)
+        #for each list of similar components
+        for clist in (system.processors(),
+                      (system.memory()),
+                      system.filesystems()):
+            #create and add the relevant history
+            layout.addWidget(ComponentHistoryView(clist))
+            #some spacing
+            layout.addSpacing(16)
 
 class TopView(QFrame):
     """Displays a top-like view of a system.
