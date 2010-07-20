@@ -22,12 +22,17 @@ from distutils.command.build import build as _build
 from distutils.cmd import Command
 from distutils.core import setup
 
-import codecs, os, subprocess, sysmon
+import codecs
+import os
+import subprocess
+import sysmon
 
 
 class build(_build):
+
     """Specialized builder - also generates icons.
     """
+
     def run(self):
         """Runs the specialized builder.
         """
@@ -36,11 +41,15 @@ class build(_build):
         print "creating icons..."
         subprocess.call(["/bin/sh", "gr/gen-image.sh"])
 
+
 class test(Command):
+
     """Custom YASMon-distutils command to run the test suite
     """
+
     user_options = []
     description = 'run unit test suites'
+
     def __init__(self, dist):
         Command.__init__(self, dist)
 
@@ -55,15 +64,15 @@ class test(Command):
         sysmon.tests.run_tests()
 
 
+def read(*rnames):
+    return codecs.open(os.path.join(*rnames), encoding='utf-8').read()
+
 #generate icon installation list (hicolor)
 iconlist = []
 for x in [16, 22, 24, 32, 36, 48, 64, 72, 96, 128, 192, 256]:
     dest = "/usr/share/icons/hicolor/%dx%d/apps" % (x, x)
     src = "gr/%dx%d/yasmon.png" % (x, x)
-    iconlist = iconlist+[(dest, [src])]
-
-def read(*rnames):
-    return codecs.open(os.path.join(*rnames), encoding = 'utf-8').read()
+    iconlist = iconlist + [(dest, [src])]
 
 setup(cmdclass = {'build': build, 'test': test},
       name = 'YASMon',
@@ -78,16 +87,19 @@ setup(cmdclass = {'build': build, 'test': test},
       keywords = 'System Monitor',
       license = 'GNU General Public License v3 or later',
       requires = ['PyQt4'],
-      packages = ['sysmon','sysmon.tests'],
-      scripts = ['yasmon','yasmond'],
-      data_files = [('/etc/init.d',['etc/init.d/yasmond']),
-                  ('/usr/share/man/man1',['doc/yasmon.1','doc/yasmond.1']),
-                  ('/usr/share/applications',['yasmon.desktop']),
-                  ('/usr/share/icons/hicolor/scalable/apps',['gr/yasmon.svg']),
-                  ('/usr/share/app-install/icons',['gr/yasmon.png']),
-                  ('/usr/share/pixmaps',['gr/yasmon.png']),
+      packages = ['sysmon', 'sysmon.tests'],
+      scripts = ['yasmon', 'yasmond'],
+      data_files = [('/etc/init.d', ['etc/init.d/yasmond']),
+                  ('/usr/share/man/man1',
+                   ['doc/yasmon.1', 'doc/yasmond.1']),
+                  ('/usr/share/applications', ['yasmon.desktop']),
                   ('/usr/share/icons/hicolor/scalable/apps',
-                   ['gr/yasmon.svg'])]+iconlist,
+                   ['gr/yasmon.svg']),
+                  ('/usr/share/app-install/icons',
+                   ['gr/yasmon.png']),
+                  ('/usr/share/pixmaps', ['gr/yasmon.png']),
+                  ('/usr/share/icons/hicolor/scalable/apps',
+                   ['gr/yasmon.svg'])] + iconlist,
       classifiers = [
         'Development Status :: 2 - Pre-Alpha',
         'Environment :: X11 Applications :: Qt',
@@ -98,5 +110,4 @@ setup(cmdclass = {'build': build, 'test': test},
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python',
         'Topic :: System :: Monitoring',
-        'Topic :: System :: Systems Administration'
-        ])
+        'Topic :: System :: Systems Administration'])
