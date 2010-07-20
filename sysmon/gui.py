@@ -26,7 +26,8 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4 import QtSvg
 
-import re,sys,sysmon,traceback
+import re,sys,traceback
+import sysmon,sysmon.history
 
 def about_yasmon(parent):
     """Displays an "About YASMon" dialog box.
@@ -274,8 +275,13 @@ class PartHistoryView(QWidget):
     """
     def __init__(self,part_list):
         QWidget.__init__(self)
-        self.clist=part_list # the list of parts for which history will be
+        self.plist=part_list # the list of parts for which history will be
                              # displayed
+        #create the list of PartHistorys
+        self.hlist = []
+        for part in self.plist:
+            hist=sysmon.history.PartHistory(part)
+            self.hlist += [hist]
         self.setToolTip("History") #FIXME TODO a better tooltip
         #set the size
         self.setMaximumSize(QSize(60000,150)) # FIXME there must be a better
@@ -309,11 +315,11 @@ class HistoryView(QFrame):
         layout=QVBoxLayout()
         self.setLayout(layout)
         #for each list of similar parts
-        for clist in (system.processors(),
-                      (system.memory()),
+        for plist in (system.processors(),
+                      [system.memory()],
                       system.filesystems()):
             #create and add the relevant history
-            layout.addWidget(PartHistoryView(clist))
+            layout.addWidget(PartHistoryView(plist))
             #some spacing
             layout.addSpacing(16)
 
