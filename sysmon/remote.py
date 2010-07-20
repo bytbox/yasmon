@@ -164,10 +164,12 @@ class RemoteUptime(Uptime):
     def uptime(self):
         return self._uptime
 
+    def update_hook(self):
+        return "uptime.updated"
+
     def do_update(self):
         info=self._contact.query('uptime')
         self._uptime=int(info)
-        self.callback().call("uptime.updated",self)
         
     def contact(self):
         """Returns the backing RemoteContact object.
@@ -189,11 +191,13 @@ class RemoteProcessor(Processor):
     def name(self):
         return self._name
 
+    def update_hook(self):
+        return "processor.%s.updated" % self.name()
+
     def do_update(self):
         info=self._contact.query("processor %s" % self.name())
         #load as pickle'd from the string
         self._dict=cPickle.loads(info)
-        self.callback().call("processor.%s.updated" % self.name(),self)        
 
     def dict(self):
         return self._dict
@@ -209,12 +213,14 @@ class RemoteMemory(Memory):
         Memory.__init__(self)
         self._dict=dict()
         self._contact=contact
+
+    def update_hook(self):
+        return "memory.updated"
         
     def do_update(self):
         info=self._contact.query('memory')
         #load as pickle'd from the string
         self._dict=cPickle.loads(info)
-        self.callback().call("memory.updated",self)
 
     def dict(self):
         return self._dict
@@ -238,12 +244,14 @@ class RemoteFilesystem(Filesystem):
         self.sz=0
         self.free=0
 
+    def update_hook(self):
+        return "filesystem.updated"
+
     def do_update(self):
         info=self._contact.query('filesystem '+self._name)
         #load as pickle'd from the string
         info=cPickle.loads(info)
         (self.sz,self.free,self.mount)=info
-        self.callback().call("filesystem.updated",self)
 
     def mount_point(self):
         return self.mount

@@ -111,11 +111,13 @@ class LocalUptime(Uptime):
     def uptime(self):
         return self._uptime
 
+    def update_hook(self):
+        return "uptime.updated"
+
     def do_update(self):
         with open("/proc/uptime") as uptime:
             for line in uptime:
                 self._uptime=float(re.split(" ",line)[0])                
-        self.callback().call("uptime.updated",self)
 
 class LocalProcessor(Processor):
     """Represents a local processor
@@ -139,6 +141,9 @@ class LocalProcessor(Processor):
 
     def dict(self):
         return self._dict
+
+    def update_hook(self):
+        return "processor.%s.updated" % self.name
 
     def do_update(self):
         ignoring=True
@@ -178,7 +183,6 @@ class LocalProcessor(Processor):
                     self.dict()['usage']=pu*self.max_freq()
                     self._totalusage=usage
                     self._totalidle=idle
-        self.callback().call("processor.%s.updated" % self.name(),self)
 
 
 class LocalMemory(Memory):
@@ -192,6 +196,9 @@ class LocalMemory(Memory):
         Memory.__init__(self)
         self.filename=filename
         self._dict=dict()
+
+    def update_hook(self):
+        return "memory.updated"
 
     def do_update(self):
         with open(self.filename) as meminfo:
@@ -207,7 +214,6 @@ class LocalMemory(Memory):
                     if match:
                         val=int(match.group(1))*1024*1024
                     self._dict[key]=val
-        self.callback().call("memory.updated",self)
 
     def dict(self):
         return self._dict
@@ -252,6 +258,9 @@ class LocalFilesystem(Filesystem):
     def size(self):
         return self.sz
 
+    def update_hook(self):
+        return "filesystem.updated"
+
     def do_update(self):
         if self.mount==None:
             return # don't bother calling any hooks
@@ -259,7 +268,6 @@ class LocalFilesystem(Filesystem):
         bsize=stat.f_bsize
         self.free=bsize*stat.f_bfree
         self.sz=bsize*stat.f_blocks
-        self.callback().call("filesystem.updated",self)
 
 
 class LocalDrive(Drive):
@@ -270,9 +278,15 @@ class LocalDrive(Drive):
         identifiers.
         """
         Drive.__init__(self)
+        # store the meta-info
+        self.major=major
+        self.minor=minor
+
+    def update_hook(self):
+        return "drive.%d.%d.updated" % (self.major,self.minor)
 
     def do_update(self):
-        self.callback().call("drive.updated",self)
+        pass
 
 
 class LocalProcessList(ProcessList):
@@ -285,9 +299,11 @@ class LocalProcessList(ProcessList):
     def __init__(self):
         ProcessList.__init__(self)
 
-    def do_update(self):
-        self.callback().call("processlist.updated",self)
+    def update_hook(self):
+        return "processlist.updated"
 
+    def do_update(self):
+        pass
 
 class LocalProcess(Process):
     """Represents a single local process.

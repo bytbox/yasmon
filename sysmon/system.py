@@ -231,6 +231,14 @@ class SystemPart():
         self._system=None
         self.timer=None
 
+    def update_hook(self):
+        """Returns a string with the name of the hook that is called after
+        each update.
+
+        Part implementations should override this method.
+        """
+        return "misc.updated"
+
     def values(self):
         """An abstract method returning a list of functions referring to (and
         returning) the data contained in an object of this class.
@@ -266,6 +274,9 @@ class SystemPart():
         #do the wuhk
         self.do_update()
 
+        #call the appropriate hook
+        self.system().callback().call(self.update_hook(),self)
+
         #don't set the timer if we're weird
         if not self.delay()==-1:
             #reset the timer
@@ -283,7 +294,7 @@ class SystemPart():
 
         Part implementations should override this method.
         """
-        self.system().callback().call("misc.updated",self)
+        pass
 
     def set_delay(self,delay):
         """Sets the delay between updates.
