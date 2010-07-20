@@ -232,14 +232,12 @@ class SystemPart():
         self.timer=None
 
     def values(self):
-        """An abstract method returning a list of functions referring
-        to (and returning) the data contained in an object of this
-        class.
+        """An abstract method returning a list of functions referring to (and
+        returning) the data contained in an object of this class.
 
-        This method should not return all available data - it should
-        only return data that can reasonably be expected to
-        change. Most of the time, this data will be numeric or in some
-        way easily graphed.
+        This method should not return all available data - it should only
+        return data that can reasonably be expected to change. Most of the
+        time, this data will be numeric or in some way easily graphed.
 
         This method must be implemented by every subclass.
         """
