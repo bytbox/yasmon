@@ -22,25 +22,27 @@ from distutils.command.build import build as _build
 from distutils.cmd import Command
 from distutils.core import setup
 
-import codecs,os,subprocess,sysmon
+import codecs, os, subprocess, sysmon
 
 
 class build(_build):
     """Specialized builder - also generates icons.
     """
     def run(self):
+        """Runs the specialized builder.
+        """
         _build.run(self)
         #create the icons
         print "creating icons..."
-        subprocess.call(["/bin/sh","gr/gen-image.sh"])
+        subprocess.call(["/bin/sh", "gr/gen-image.sh"])
 
 class test(Command):
     """Custom YASMon-distutils command to run the test suite
     """
-    user_options=[]
-    description='run unit test suites'
-    def __init__(self,dist):
-        Command.__init__(self,dist)
+    user_options = []
+    description = 'run unit test suites'
+    def __init__(self, dist):
+        Command.__init__(self, dist)
 
     def initialize_options(self):
         pass
@@ -54,31 +56,31 @@ class test(Command):
 
 
 #generate icon installation list (hicolor)
-iconlist=[]
-for x in [16,22,24,32,36,48,64,72,96,128,192,256]:
-    dest="/usr/share/icons/hicolor/%dx%d/apps" % (x,x)
-    src="gr/%dx%d/yasmon.png" % (x,x)
-    iconlist=iconlist+[(dest,[src])]
+iconlist = []
+for x in [16, 22, 24, 32, 36, 48, 64, 72, 96, 128, 192, 256]:
+    dest = "/usr/share/icons/hicolor/%dx%d/apps" % (x, x)
+    src = "gr/%dx%d/yasmon.png" % (x, x)
+    iconlist = iconlist+[(dest, [src])]
 
 def read(*rnames):
-    return codecs.open(os.path.join(*rnames), encoding='utf-8').read()
+    return codecs.open(os.path.join(*rnames), encoding = 'utf-8').read()
 
-setup(cmdclass={'build': build, 'test': test},
-      name='YASMon',
-      version=sysmon.version(),
-      description='Yet Another System Monitor',
-      long_description=read('README.rst'),
-      author='Scott Lawrence',
-      author_email='bytbox@gmail.com',
-      maintainer='Scott Lawrence',
-      maintainer_email='bytbox@gmail.com',
-      url='http://github.com/bytbox/yasmon',
-      keywords='System Monitor',
-      license='GNU General Public License v3 or later',
-      requires=['PyQt4'],
-      packages=['sysmon','sysmon.tests'],
-      scripts=['yasmon','yasmond'],
-      data_files=[('/etc/init.d',['etc/init.d/yasmond']),
+setup(cmdclass = {'build': build, 'test': test},
+      name = 'YASMon',
+      version = sysmon.version(),
+      description = 'Yet Another System Monitor',
+      long_description = read('README.rst'),
+      author = 'Scott Lawrence',
+      author_email = 'bytbox@gmail.com',
+      maintainer = 'Scott Lawrence',
+      maintainer_email = 'bytbox@gmail.com',
+      url = 'http://github.com/bytbox/yasmon',
+      keywords = 'System Monitor',
+      license = 'GNU General Public License v3 or later',
+      requires = ['PyQt4'],
+      packages = ['sysmon','sysmon.tests'],
+      scripts = ['yasmon','yasmond'],
+      data_files = [('/etc/init.d',['etc/init.d/yasmond']),
                   ('/usr/share/man/man1',['doc/yasmon.1','doc/yasmond.1']),
                   ('/usr/share/applications',['yasmon.desktop']),
                   ('/usr/share/icons/hicolor/scalable/apps',['gr/yasmon.svg']),
@@ -86,7 +88,7 @@ setup(cmdclass={'build': build, 'test': test},
                   ('/usr/share/pixmaps',['gr/yasmon.png']),
                   ('/usr/share/icons/hicolor/scalable/apps',
                    ['gr/yasmon.svg'])]+iconlist,
-      classifiers=[
+      classifiers = [
         'Development Status :: 2 - Pre-Alpha',
         'Environment :: X11 Applications :: Qt',
         'Environment :: Console',

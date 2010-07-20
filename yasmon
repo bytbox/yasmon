@@ -49,24 +49,24 @@ parser.add_option("-R","--local",action="store_true",
                   dest="local_mode",help="Use local mode (default)")
 (options,args)=parser.parse_args()
 
+# select the initial mode
 mode="local"
 if options.remote_mode:
     mode="remote"
 
 
-#import what we need
+# import what we know we need
 import shlex,sys,time
 import sysmon.callback
 from sysmon.error import *
 
-#import for the mode
+# import for the mode
 if mode=='local':
     import sysmon.local
 else:
     import sysmon.remote
 
-#import for the UI setting
-#also set appropriate error yandling
+# import for the UI setting
 if options.curses:
     from sysmon import curses
 elif not options.log:
@@ -75,17 +75,11 @@ elif not options.log:
     from PyQt4.QtCore import *
     from PyQt4.QtGui import *
 
-#initialize the monitor
-#callback
+#callback for handling unhandled updates
 callback=sysmon.callback.SysmonCallback()
 def handle_misc_update(data):
     print "Miscellaneous update: ",data
 callback.hook("misc.updated",handle_misc_update)
-
-#handle strange updates
-callback.hook("misc.updated",
-              handle_misc_update)
-
 
 systems={}
 if mode=="local":
