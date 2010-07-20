@@ -51,6 +51,15 @@ Use remote mode, connecting to the specified servers.
 .TP
 \fB\-R\fR, \fB\-\-local\fR
 Use local mode, not connecting to any servers. (This is the default.)
+.SH BUGS
+Because remote monitoring happens over an unsecured connection, arbitrary data
+could be injected by an attacker with access to the same network over which
+remote monitoring is being performed. This data could display incorrect
+information, or worse, be maliciously constructed to execute arbitrary code.
+
+Current bugs can be viewed in the issue tracker on github
+<http://github.com/bytbox/yasmon/issues>. Bugs and feature requests may be
+reported to the same place.
 .SH SEE ALSO
 \fByasmond\fR(1)
 .SH AUTHOR
