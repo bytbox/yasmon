@@ -250,7 +250,16 @@ class SystemPart():
         This method must be implemented by every subclass.
         """
         raise UnimplementedError("SystemParts must implement values()")
- 
+
+    def data_copy(self):
+        """Returns a persistent object encapsulating all current data for this
+        part.
+
+        This may be considered to be a shallow copy of a tuple containing all
+        of this parts data.
+        """
+        return ("fixme",)
+
     @staticmethod
     def null():
         """Returns a null part to be used when no real part is

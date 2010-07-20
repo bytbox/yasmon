@@ -41,13 +41,7 @@ class PartHistory():
         part.system().callback().hook(part.update_hook(),
                                       self.catch_update)
         # initialize history with current values
-        self.hist=[self.current_data()]
-
-    def current_data(self):
-        """Returns a persistent object encapsulating all current data for this
-        part.
-        """
-        return cPickle.dumps("hi")
+        self.hist=[self.part.data_copy()]
 
     def catch_update(self,data):
         """Updates the history.
@@ -57,4 +51,4 @@ class PartHistory():
         confuse and possibly corrupt the history record.
         """
         # append the current data to the history
-        self.hist += [self.current_data()]
+        self.hist += [self.part.data_copy()]
