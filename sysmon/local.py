@@ -143,7 +143,7 @@ class LocalProcessor(Processor):
         return self._dict
 
     def update_hook(self):
-        return "processor.%s.updated" % self.name
+        return "processor.%s.updated" % self.name()
 
     def do_update(self):
         ignoring=True
