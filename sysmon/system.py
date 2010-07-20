@@ -20,8 +20,10 @@
 
 """
 
+import copy
 from threading import Lock,Timer
 import re
+
 import callback
 from error import *
 
@@ -255,10 +257,12 @@ class SystemPart():
         """Returns a persistent object encapsulating all current data for this
         part.
 
-        This may be considered to be a shallow copy of a tuple containing all
-        of this parts data.
+        This is generally a shallow copy of some data structure containing all
+        the data for this part, although that is not guaranteed. The return
+        value of this function should never be used outside of the sysmon
+        modules.
         """
-        return ("fixme",)
+        return [None]
 
     @staticmethod
     def null():
@@ -343,6 +347,10 @@ class Uptime(SystemPart):
         """
         return 0
 
+    def data_copy(self):
+        # self.values does the right thing
+        return self.values()
+
     @staticmethod
     def null():
         return NullUptime()
@@ -356,6 +364,9 @@ class Processor(SystemPart):
     @staticmethod
     def null():
         return NullProcessor()
+
+    def data_copy(self):
+        return self.dict().copy()
 
     def values(self):
         return [self.dict]
@@ -408,6 +419,9 @@ class Memory(SystemPart):
     @staticmethod
     def null():
         return NullMemory()
+
+    def data_copy(self):
+        return self.dict().copy()
 
     def values(self):
         return [self.dict]
@@ -468,6 +482,13 @@ class Filesystem(SystemPart):
     @staticmethod
     def null():
         return NullFilesystem()
+
+    def data_copy(self):
+        return {"available": self.available(),
+                "size": self.size(),
+                "device": self.device(),
+                "mount_point": self.mount_point()}
+                
 
     def values(self):
         return []
@@ -564,5 +585,6 @@ class Server:
         return []
 
 
+# get the null part definitions
 from null import *
 
