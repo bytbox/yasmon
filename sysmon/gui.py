@@ -268,6 +268,9 @@ class SystemView(QGroupBox):
 
 class ComponentHistoryView(QWidget):
     """Displays the history of a set of similar components on a single graph.
+    
+    Note that because this view may apply to multiple Components, it may draw
+    on the data of multiple ComponentHistorys.
     """
     def __init__(self,component_list):
         QWidget.__init__(self)
@@ -280,7 +283,6 @@ class ComponentHistoryView(QWidget):
         self.setMinimumSize(QSize(100,80))
 
     def paintEvent(self,event):
-        
         #settings
         painter=QPainter(self)
         painter.setPen(QPen()) # defaults
@@ -292,6 +294,7 @@ class ComponentHistoryView(QWidget):
 
         #white background
         painter.fillRect(QRect(0,0,w,h),QColor.fromRgb(255,255,255))
+        
         
 class HistoryView(QFrame):
     """Displays most of OverviewView's content, as a history.
