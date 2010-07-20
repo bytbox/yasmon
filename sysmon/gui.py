@@ -246,8 +246,8 @@ class UptimeView(QLabel):
         return QSize(120,20)
 
 class SystemView(QGroupBox):
-    """Displays current information for the most general (and
-    critical) parts of a single system.
+    """Displays current information for the most general (and critical) parts
+    of a single system.
     
     This generally means the processors, memory, and hard disk
     usage.
@@ -266,20 +266,20 @@ class SystemView(QGroupBox):
         layout.addSpacing(16)
         layout.addWidget(FilesysView(system.filesystems()))
 
-class ComponentHistoryView(QWidget):
-    """Displays the history of a set of similar components on a single graph.
+class PartHistoryView(QWidget):
+    """Displays the history of a set of similar parts on a single graph.
     
-    Note that because this view may apply to multiple Components, it may draw
-    on the data of multiple ComponentHistorys.
+    Note that because this view may apply to multiple Parts, it may draw on
+    the data of multiple PartHistorys.
     """
-    def __init__(self,component_list):
+    def __init__(self,part_list):
         QWidget.__init__(self)
-        self.clist=component_list # the list of components for which history
-                                  # will be displayed
+        self.clist=part_list # the list of parts for which history will be
+                             # displayed
         self.setToolTip("History") #FIXME TODO a better tooltip
         #set the size
-        self.setMaximumSize(QSize(60000,150)) # FIXME there must be a
-                                                     # better way to do this
+        self.setMaximumSize(QSize(60000,150)) # FIXME there must be a better
+                                              # way to do this
         self.setMinimumSize(QSize(100,80))
 
     def paintEvent(self,event):
@@ -308,12 +308,12 @@ class HistoryView(QFrame):
         QFrame.__init__(self)
         layout=QVBoxLayout()
         self.setLayout(layout)
-        #for each list of similar components
+        #for each list of similar parts
         for clist in (system.processors(),
                       (system.memory()),
                       system.filesystems()):
             #create and add the relevant history
-            layout.addWidget(ComponentHistoryView(clist))
+            layout.addWidget(PartHistoryView(clist))
             #some spacing
             layout.addSpacing(16)
 

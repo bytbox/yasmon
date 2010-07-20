@@ -16,12 +16,18 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>. #
 #########################################################################
 
-"""Provides utilities for storing and analyzing histories of components.
+"""Provides utilities for storing and analyzing histories of parts.
 """
 
 import sysmon
 
-class ComponentHistory():
-    """Stores the history of a single component.
+class PartHistory():
+    """Stores the history of a single part.
     """
-    pass
+    def __init__(self,part):
+        """Creates a self-managing PartHistory for the given part.
+
+        The PartHistory will need no maintenance - at any point in the
+        future, it may be queried for the most up-to-date history data.
+        """
+        pass
