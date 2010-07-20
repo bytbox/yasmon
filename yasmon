@@ -169,7 +169,7 @@ else:
         def __init__(self):
             """Creates the main window.
             """
-            gui.QMainWindow.__init__(self)
+            gui.QMainWindow.__init__(self,None,Qt.WindowContextHelpButtonHint)
             self.createActions()
             self.createMenus()
             self.createLayout()

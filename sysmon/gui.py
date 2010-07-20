@@ -57,7 +57,11 @@ class AboutYasmon(QDialog):
     """YASMon's about dialog box.
     """
     def __init__(self,parent):
-        super(AboutYasmon, self).__init__(parent)
+        super(AboutYasmon, self).
+        __init__(parent,
+                 Qt.CustomizeWindowHint | # turn off defaults
+                 Qt.WindowTitleHint | # obviously
+                 Qt.WindowCloseButtonHint)
         self.setWindowTitle("About YASMon")
         overlayout=QVBoxLayout()
         layout=QHBoxLayout()
