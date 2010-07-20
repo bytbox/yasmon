@@ -19,11 +19,12 @@
 #########################################################################
 
 from optparse import OptionParser
-import re,sysmon
+import re
+import sysmon
 
 #parse the options
-parser=OptionParser(usage="usage: %prog [-d DELAY] [-l | -c] [SERVER ...]",
-                    version=("YASMon "+sysmon.version()+"\n"+
+parser = OptionParser(usage="usage: %prog [-d DELAY] [-l | -c] [SERVER ...]",
+                      version=("YASMon "+sysmon.version()+"\n"+
                              "Copyright (C) 2010 Scott Lawrence.\n"+
                              "Licensed under the GNU GPL version 3 or later "+
                              "<http://gnu.org/licenses/gpl.html>.\n"
@@ -33,26 +34,28 @@ parser=OptionParser(usage="usage: %prog [-d DELAY] [-l | -c] [SERVER ...]",
                              "extent permitted by law."+
                              "\n\n"+
                              "Written by Scott Lawrence <bytbox@gmail.com>"))
-parser.add_option("-c","--curses",
-                  action="store_true",dest="curses",
+parser.add_option("-c", "--curses",
+                  action="store_true", dest="curses",
                   help="Display a curses interface")
-parser.add_option("-d","--delay",dest="delay",default=5,
-                  help="Delay between updates, in seconds (may be decimal). Default: 5")
-parser.add_option("--fs-delay",dest="fs_delay",default=120,
-                  help="Delay between filesystem updates, in seconds (may be decimal). Default: 120")
-parser.add_option("-l","--log",
-                  action="store_true",dest="log",
+parser.add_option("-d", "--delay", dest="delay", default=5,
+                  help="Delay between updates, in seconds (may be decimal). "+
+                  "Default: 5")
+parser.add_option("--fs-delay", dest="fs_delay", default=120,
+                  help="Delay between filesystem updates, in seconds "+
+                  "(may be decimal). Default: 120")
+parser.add_option("-l", "--log",
+                  action="store_true", dest="log",
                   help="Log events to standard output")
-parser.add_option("-r","--remote",action="store_true",
-                  dest="remote_mode",help="Use remote mode")
-parser.add_option("-R","--local",action="store_true",
-                  dest="local_mode",help="Use local mode (default)")
+parser.add_option("-r", "--remote", action="store_true",
+                  dest="remote_mode", help="Use remote mode")
+parser.add_option("-R", "--local", action="store_true",
+                  dest="local_mode", help="Use local mode (default)")
 (options,args)=parser.parse_args()
 
 # select the initial mode
-mode="local"
+mode = "local"
 if options.remote_mode:
-    mode="remote"
+    mode = "remote"
 
 
 # import what we know we need
@@ -61,7 +64,7 @@ import sysmon.callback
 from sysmon.error import *
 
 # import for the mode
-if mode=='local':
+if mode == 'local':
     import sysmon.local
 else:
     import sysmon.remote
@@ -82,33 +85,33 @@ def handle_misc_update(data):
 callback.hook("misc.updated",handle_misc_update)
 
 systems={}
-if mode=="local":
-    local=sysmon.local.get_local()
+if mode == "local":
+    local = sysmon.local.get_local()
     local.set_delay(float(options.delay))
     local.set_callback(callback)
     #set special delays
     for fs in local.filesystems():
         fs.set_delay(float(options.fs_delay))
-    systems['localhost']=local
+    systems['localhost'] = local
 
-elif mode=="remote":
+elif mode == "remote":
     #note: do NOT assume localhost to be one of the systems!
-    if len(args)==0:
+    if len(args) == 0:
         raise CLArgumentError("no remote systems specified")
     for sysname in args:
-        match=re.match("^(.+):(.+)$",sysname)
+        match = re.match("^(.+):(.+)$",sysname)
         if match:
-            port=int(match.group(2))
-            sysname=match.group(1)
+            port = int(match.group(2))
+            sysname = match.group(1)
         else:
-            port=61874
+            port = 61874
         try:
-            system=sysmon.remote.get_remote(sysname,port)
+            system = sysmon.remote.get_remote(sysname,port)
             #set delays
             system.set_delay(float(options.delay))
             for fs in system.filesystems():
                 fs.set_delay(float(options.fs_delay))
-            systems[sysname]=system
+            systems[sysname] = system
         except IOError as err:
             #could not connect! 
             raise RemoteError(sysname,"could not connect")
@@ -126,9 +129,11 @@ elif options.log:
 
     #hooks
     def handle_processor_update(p):
-        print "%s: %f" % (p.name(),p.usage()/p.max_freq())
+        print "%s: %f" % (p.name(), p.usage() / p.max_freq())
     def handle_memory_update(mem):
-        print "mem: %f%%" % (100*float(mem.active_memory())/float(mem.total_memory()))
+        print "mem: %f%%" % (100 *
+                             float(mem.active_memory()) /
+                             float(mem.total_memory()))
 
 
     #register hooks
