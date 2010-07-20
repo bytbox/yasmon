@@ -1,7 +1,7 @@
 Overview
 ========
-YASMon is system monitoring software designed to monitor both the
-local system and an arbitrary number of remote systems.
+YASMon is system monitoring application designed to monitor both the local
+system and an arbitrary number of remote systems.
 
 YASMon can operate either in local mode - acting as a standard system monitor
 for the computer on which it is running - or in remote mode, providing
