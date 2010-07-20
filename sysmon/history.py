@@ -19,10 +19,15 @@
 """Provides utilities for storing and analyzing histories of parts.
 """
 
+import cPickle
+
 import sysmon
 
 class PartHistory():
     """Stores the history of a single part.
+
+    Because different parts of the history might be needed at different times,
+    PartHistory serializes the entire part.
     """
     def __init__(self,part):
         """Creates a self-managing PartHistory for the given part.
@@ -35,6 +40,14 @@ class PartHistory():
         # add the hook
         part.system().callback().hook(part.update_hook(),
                                       self.catch_update)
+        # initialize history with current values
+        self.hist=[self.current_data()]
+
+    def current_data(self):
+        """Returns a persistent object encapsulating all current data for this
+        part.
+        """
+        return cPickle.dumps("hi")
 
     def catch_update(self,data):
         """Updates the history.
@@ -43,4 +56,5 @@ class PartHistory():
         system), and should not be called in any other way, as this would
         confuse and possibly corrupt the history record.
         """
-        pass
+        # append the current data to the history
+        self.hist += [self.current_data()]
