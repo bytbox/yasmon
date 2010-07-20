@@ -30,4 +30,17 @@ class PartHistory():
         The PartHistory will need no maintenance - at any point in the
         future, it may be queried for the most up-to-date history data.
         """
+        # remember the part
+        self.part=part
+        # add the hook
+        part.system().callback().hook(part.update_hook(),
+                                      self.catch_update)
+
+    def catch_update(self,data):
+        """Updates the history.
+
+        This method is called after the attached part updates (by the hook
+        system), and should not be called in any other way, as this would
+        confuse and possibly corrupt the history record.
+        """
         pass
