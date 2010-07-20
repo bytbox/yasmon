@@ -230,7 +230,6 @@ class SystemPart():
         self._delay=None
         self._system=None
         self.timer=None
-        self._history=SystemPartHistory(self)
 
     def values(self):
         """An abstract method returning a list of functions referring
@@ -316,34 +315,6 @@ class SystemPart():
         """Returns the history storing information about this part.
         """
         return self._history
-
-
-class SystemPartHistory():
-    """Stores the history of a system part.
-
-    This class should not be extended. If you want to extend it, you
-    are almost certainly doing something very wrong.
-    """
-    def __init__(self,part):
-        """Creates a blank history for the given part.
-        """
-        self._part=part
-        self.part_values=part.values()
- 
-    def update(self):
-        """Update the part's history.
-
-        This method needs to be called once for each update -
-        SystemPartHistory will not keep track of a delay. In normal
-        usage, the SystemPart will take care of this.
-        """
-        self.part().system().callback().call("misc.hist.updated")
-
-    def part(self):
-        """Returns the SystemPart for which this object stores
-        history.  
-        """
-        return self._part
 
 
 class Uptime(SystemPart):
