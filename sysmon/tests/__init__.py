@@ -19,17 +19,17 @@
 """Test suites for YASMon
 """
 
-#unit tests
+# unit tests
 from unittest import *
 
-#available unit tests
+# available unit tests
 import localtest,remotetest,daemontest,testrunner
 
 def run_tests():
     """Simple interface to run all tests.
     """
     #run the tests!
-    runner=TextTestRunner(verbosity=2)
+    runner=testrunner.MyTestRunner()
     #for each suite
     suites=[localtest.suite(),remotetest.suite(),daemontest.suite()]
     for suite in suites:

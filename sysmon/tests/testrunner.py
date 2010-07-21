@@ -19,11 +19,40 @@
 """Master YASMon tester.
 """
 
-#unit tests
+# system imports
+import os
+import sys
+
+# unit tests
 from unittest import *
 
-#available unit tests
-import localtest,remotetest,daemontest
+class MyTestSuite(TestSuite):
+    """Custom TestSuite implementation for YASMon.
+    """
+    def __init__(self,id,cases):
+        TestSuite.__init__(self,cases)
+        self._id=id
+
+    def id(self):
+        return self._id
+
+class MyTestResult(TestResult):
+    """Custom TestRsult implementation for YASMon, for use with MyTestRunner.
+    """
+    def __init__(self,callback):
+        """Constructs a MyTestResult instance that will call the specified
+        callback as progress is made.
+        """
+        self.callback=callback
+
+    def addError(self,test,err):
+        self.callback.addError(test,err)
+
+    def addFailure(self,test,err):
+        self.callback.addFailure(test,err)
+
+    def addSuccess(self,test):
+        self.callback.addSuccess(test)
 
 class MyTestRunner():
     """Custom TestRunner implemenation for YASMon.
@@ -31,5 +60,17 @@ class MyTestRunner():
     This implementation uses curses to a limited extent for the
     creation of progress bars and, where possible, colored output.
     """
-    pass
+    def __init__(self):
+        """Constructs a TestRunner that employs a GUI.
+        """
+        pass
+        
+    def run(self,suite):
+        """Runs the given suites.
+        """
+        usecurses=sys.stdin.isatty()
+        maxscore=100
+        print suite.id()
+        result=MyTestResult(self)
+        suite.run(result)
 

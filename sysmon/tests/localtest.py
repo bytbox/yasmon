@@ -28,8 +28,9 @@ sys.path=['..']+sys.path
 
 #import the needed YASMon modules
 from sysmon import local,error,version
+from sysmon.tests import testrunner
 
 def suite():
     """Returns the relevant test suite.
     """
-    return unittest.TestSuite([])
+    return testrunner.MyTestSuite('Local',[])
