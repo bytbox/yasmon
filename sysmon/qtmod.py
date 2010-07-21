@@ -18,7 +18,48 @@
 
 """Improved versions of Qt4 widgets for use in YASMon.
 
+All classes in this module use the prefix 'QM' for 'QtMod'.
 """
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+
+class QMKeyValueTable(QTableWidget):
+    """Displays a basic, two-column, immutable table.
+    """
+    row_height=20
+    def __init__(self):
+        """There are no configuration options.
+        """
+        QTableWidget.__init__(self,0,2)
+        self.content = []
+        self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.verticalHeader().hide()
+        self.horizontalHeader().hide()
+
+    def addRow(self,key,value):
+        """Add a row with the specified key and value.
+
+        A tuple with the QMTableItems containing the key and the value is
+        returned.
+        """
+        # add the stuff to our content database
+        items = (QTableWidgetItem(key),
+                 QTableWidgetItem(value))
+        self.content += [items]
+        rc=self.rowCount()
+        # add this row to the gui
+        self.insertRow(rc)
+        self.setItem(rc,0,items[0])
+        self.setItem(rc,1,items[1])
+        self.setRowHeight(rc,self.row_height)
+        self.resizeColumnToContents(0)
+        self.resizeColumnToContents(1)
+        # return the tuple of QTableWidgetItems
+        return items
+
+    def sizeHint(self):
+        return QSize(-1,
+                     (35)*len(self.content))

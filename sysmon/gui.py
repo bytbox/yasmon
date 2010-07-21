@@ -32,7 +32,7 @@ import sys
 import traceback
 
 # sysmon imports
-import sysmon.qtmod
+from sysmon import qtmod
 import sysmon
 import sysmon.history
 
@@ -340,46 +340,35 @@ class TopView(QFrame):
     def __init__(self,system):
         QFrame.__init__(self)
 
-class MetaView(QTableWidget):
-    """Displays interesting/semi-important static meta-information
-    about the system.
+class MetaView(qtmod.QMKeyValueTable):
+    """Displays interesting/semi-important static meta-information about the
+    system.
     """
     def __init__(self,system):
-        QTableWidget.__init__(self,0,2)
-        self.setColumnWidth(1,600)
-        self.verticalHeader().setClickable(False)
-        self.horizontalHeader().setClickable(False)
+        qtmod.QMKeyValueTable.__init__(self)
         self.meta=system.meta()
-        #enable satus bar stuff
+        # enable satus bar stuff
         self.setMouseTracking(True)
         for key in self.meta:
             desc=self.meta[key][0]
             value=self.meta[key][1]
-            rc=self.rowCount()
-            self.insertRow(rc)
-            self.setRowHeight(rc,20)
-            #key field
-            ki=QTableWidgetItem(key)
-            #show description stuff
+            (ki,vi)=self.addRow(key,value)
+            # set information for the key item
+            # flags
+            ki.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+            # show description stuff
             ki.setToolTip(desc)
             ki.setStatusTip(desc)
             ki.setWhatsThis(desc)
-            #flags
-            ki.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
             
-            #value field
-            vi=QTableWidgetItem(value)
-            #flags
+            # set information for the value item
+            # flags
             vi.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
-            #expand on the value
+            # expand on the value
             vi.setToolTip(value)
             vi.setStatusTip(value)
             vi.setWhatsThis(desc)
-            self.setItem(rc,0,ki)
-            self.setItem(rc,1,vi)
-    def sizeHint(self):
-        return QSize(650,100)
-        
+
 
 class DetailedSystemView(QFrame):
     """Displays a detailed system view, consisting of a MetaView,
@@ -387,12 +376,12 @@ class DetailedSystemView(QFrame):
     """
     def __init__(self,system):
         QFrame.__init__(self)
-        layout=QVBoxLayout()
-        sublayout=QHBoxLayout()
-        layout.addWidget(MetaView(system))
+        layout = QVBoxLayout()
+        sublayout = QHBoxLayout()
         sublayout.addWidget(HistoryView(system))
         sublayout.addWidget(TopView(system))
         layout.addLayout(sublayout)
+        layout.addWidget(MetaView(system))
         self.setLayout(layout)
         
 class MainView(QWidget):
@@ -403,14 +392,16 @@ class MainView(QWidget):
     """
     def __init__(self,systems):
         QWidget.__init__(self)
-        layout=QVBoxLayout()
-        sublayout=QHBoxLayout()
+        layout = QVBoxLayout()
+        sublayout = QHBoxLayout()
         self.setLayout(layout)
-        tabWidget=QTabWidget()
+        tabWidget = QTabWidget()
         tabWidget.setTabPosition(QTabWidget.South)
         for system in systems:
-            tabid=tabWidget.addTab(DetailedSystemView(systems[system]),QString(system))
-            tabWidget.setTabToolTip(tabid,QString("View information for %s" % system))
+            tabid = tabWidget.addTab(DetailedSystemView(systems[system]),
+                                     QString(system))
+            tabWidget.setTabToolTip(tabid,
+                                    QString("View information for %s" % system))
             sublayout.addWidget(SystemView(systems[system]))
         sublayout.addStretch()
         layout.addLayout(sublayout)
