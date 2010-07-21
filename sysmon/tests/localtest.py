@@ -30,7 +30,17 @@ sys.path=['..']+sys.path
 from sysmon import local,error,version
 from sysmon.tests import testrunner
 
+def get_local_notnull():
+    return None
+
+testlist=[('get_local_notnull',get_local_notnull)]
+testcaselist=[]
+
+for test in testlist:
+    testcaselist+=[unittest.FunctionTestCase(test[1],
+                                             description=test[0])]
+
 def suite():
     """Returns the relevant test suite.
     """
-    return testrunner.MyTestSuite('Local',[])
+    return testrunner.MyTestSuite('Local',testcaselist)

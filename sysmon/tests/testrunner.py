@@ -43,6 +43,7 @@ class MyTestResult(TestResult):
         """Constructs a MyTestResult instance that will call the specified
         callback as progress is made.
         """
+        TestResult.__init__(self)
         self.callback=callback
 
     def addError(self,test,err):
@@ -74,3 +75,11 @@ class MyTestRunner():
         result=MyTestResult(self)
         suite.run(result)
 
+    def addError(self,test,err):
+        print "error: ",err
+
+    def addFailure(self,test,err):
+        print "failure: ",err
+
+    def addSuccess(self,test):
+        print "success!"
