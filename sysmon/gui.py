@@ -21,13 +21,20 @@ using Qt4.
 
 """
 
-#GUI Code for YASMon client (uses QT4)
+# GUI Code for YASMon client (uses QT4)
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4 import QtSvg
 
-import re,sys,traceback
-import sysmon,sysmon.history
+# standard python imports
+import re
+import sys
+import traceback
+
+# sysmon imports
+import sysmon.qtmod
+import sysmon
+import sysmon.history
 
 def about_yasmon(parent):
     """Displays an "About YASMon" dialog box.
