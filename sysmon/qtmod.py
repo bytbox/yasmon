@@ -36,6 +36,7 @@ class QMKeyValueTable(QTableWidget):
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.verticalHeader().hide()
         self.horizontalHeader().hide()
 
@@ -57,9 +58,13 @@ class QMKeyValueTable(QTableWidget):
         self.setRowHeight(rc,self.row_height)
         self.resizeColumnToContents(0)
         self.resizeColumnToContents(1)
+        # set the minimum size
+        self.setMinimumHeight(self.sizeHint().height())
+        self.setMinimumWidth(self.columnWidth(0)+
+                             6+self.columnWidth(1))
         # return the tuple of QTableWidgetItems
         return items
 
     def sizeHint(self):
         return QSize(-1,
-                     (35)*len(self.content))
+                     (self.row_height)*(len(self.content))+4)
